@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Video {
+  id        String     @id @default(cuid())
+  filename  String
+  path      String
+  size      Int
+  duration  Float?
+  status    Status     @default(uploaded)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  edits     EditTask[]
+
+  @@map("video")
+}
+
+model EditTask {
+  id        String   @id @default(uuid())
+  video     Video    @relation(fields: [videoId], references: [id])
+  videoId   String
+  type      String
+  params    Json
+  status    Status   @default(pending)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("edit_task")
+}
+
+enum Status {
+  uploaded
+  pending
+}

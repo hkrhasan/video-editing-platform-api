@@ -1,30 +1,49 @@
 
 services:
-  app:
+  api:
     build:
-      context: .
+      context: ./api
       dockerfile: Dockerfile
       target: builder
     env_file:
-      - .env
+      - ./api/.env
     volumes:
-      - node_modules:/usr/src/app/node_modules
-      - ./:/app
+      - ./api:/app
     ports:
       - "3000:3000"
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app-network
+    command: >
+      sh -c "pnpm run prisma:migrate:reset && pnpm run prisma:migrate && pnpm run prisma:generate && pnpm run dev"
+
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+      target: builder
+    env_file:
+      - ./worker/.env
+    volumes:
+      - ./worker:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - app-network
     command: >
       sh -c "pnpm run dev"
-
   postgres:
     image: postgres:17
     restart: always
     env_file:
-      - .env
+      - ./api/.env
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -41,11 +60,25 @@ services:
       start_period: 30s
     networks:
       - app-network
-
+  redis:
+    image: redis:7-alpine
+    restart: always
+    volumes:
+      - redisdata:/var/lib/redis/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app-network
 networks:
   app-network:
     driver: bridge
 
 volumes:
-  node_modules:
   pgdata:
+  redisdata:
