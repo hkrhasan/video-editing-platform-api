@@ -19,16 +19,41 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type Video = $Result.DefaultSelection<Prisma.$VideoPayload>
 /**
- * Model EditTask
+ * Model Instruction
  * 
  */
-export type EditTask = $Result.DefaultSelection<Prisma.$EditTaskPayload>
+export type Instruction = $Result.DefaultSelection<Prisma.$InstructionPayload>
+/**
+ * Model RenderJob
+ * 
+ */
+export type RenderJob = $Result.DefaultSelection<Prisma.$RenderJobPayload>
 
 /**
  * Enums
  */
 export namespace $Enums {
-  export const Status: {
+  export const InstructionType: {
+  SUBTITLE: 'SUBTITLE',
+  AUDIO_MODIFY: 'AUDIO_MODIFY',
+  OVERLAY_TEXT: 'OVERLAY_TEXT',
+  OVERLAY_IMAGE: 'OVERLAY_IMAGE'
+};
+
+export type InstructionType = (typeof InstructionType)[keyof typeof InstructionType]
+
+
+export const JobStatus: {
+  QUEUED: 'QUEUED',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus]
+
+
+export const Status: {
   uploaded: 'uploaded',
   pending: 'pending'
 };
@@ -36,6 +61,14 @@ export namespace $Enums {
 export type Status = (typeof Status)[keyof typeof Status]
 
 }
+
+export type InstructionType = $Enums.InstructionType
+
+export const InstructionType: typeof $Enums.InstructionType
+
+export type JobStatus = $Enums.JobStatus
+
+export const JobStatus: typeof $Enums.JobStatus
 
 export type Status = $Enums.Status
 
@@ -177,14 +210,24 @@ export class PrismaClient<
   get video(): Prisma.VideoDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.editTask`: Exposes CRUD operations for the **EditTask** model.
+   * `prisma.instruction`: Exposes CRUD operations for the **Instruction** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more EditTasks
-    * const editTasks = await prisma.editTask.findMany()
+    * // Fetch zero or more Instructions
+    * const instructions = await prisma.instruction.findMany()
     * ```
     */
-  get editTask(): Prisma.EditTaskDelegate<ExtArgs, ClientOptions>;
+  get instruction(): Prisma.InstructionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.renderJob`: Exposes CRUD operations for the **RenderJob** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RenderJobs
+    * const renderJobs = await prisma.renderJob.findMany()
+    * ```
+    */
+  get renderJob(): Prisma.RenderJobDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -626,7 +669,8 @@ export namespace Prisma {
 
   export const ModelName: {
     Video: 'Video',
-    EditTask: 'EditTask'
+    Instruction: 'Instruction',
+    RenderJob: 'RenderJob'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -645,7 +689,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "video" | "editTask"
+      modelProps: "video" | "instruction" | "renderJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -723,77 +767,151 @@ export namespace Prisma {
           }
         }
       }
-      EditTask: {
-        payload: Prisma.$EditTaskPayload<ExtArgs>
-        fields: Prisma.EditTaskFieldRefs
+      Instruction: {
+        payload: Prisma.$InstructionPayload<ExtArgs>
+        fields: Prisma.InstructionFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.EditTaskFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$EditTaskPayload> | null
+            args: Prisma.InstructionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstructionPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.EditTaskFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$EditTaskPayload>
+            args: Prisma.InstructionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstructionPayload>
           }
           findFirst: {
-            args: Prisma.EditTaskFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$EditTaskPayload> | null
+            args: Prisma.InstructionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstructionPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.EditTaskFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$EditTaskPayload>
+            args: Prisma.InstructionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstructionPayload>
           }
           findMany: {
-            args: Prisma.EditTaskFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$EditTaskPayload>[]
+            args: Prisma.InstructionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstructionPayload>[]
           }
           create: {
-            args: Prisma.EditTaskCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$EditTaskPayload>
+            args: Prisma.InstructionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstructionPayload>
           }
           createMany: {
-            args: Prisma.EditTaskCreateManyArgs<ExtArgs>
+            args: Prisma.InstructionCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.EditTaskCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$EditTaskPayload>[]
+            args: Prisma.InstructionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstructionPayload>[]
           }
           delete: {
-            args: Prisma.EditTaskDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$EditTaskPayload>
+            args: Prisma.InstructionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstructionPayload>
           }
           update: {
-            args: Prisma.EditTaskUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$EditTaskPayload>
+            args: Prisma.InstructionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstructionPayload>
           }
           deleteMany: {
-            args: Prisma.EditTaskDeleteManyArgs<ExtArgs>
+            args: Prisma.InstructionDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.EditTaskUpdateManyArgs<ExtArgs>
+            args: Prisma.InstructionUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.EditTaskUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$EditTaskPayload>[]
+            args: Prisma.InstructionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstructionPayload>[]
           }
           upsert: {
-            args: Prisma.EditTaskUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$EditTaskPayload>
+            args: Prisma.InstructionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstructionPayload>
           }
           aggregate: {
-            args: Prisma.EditTaskAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateEditTask>
+            args: Prisma.InstructionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInstruction>
           }
           groupBy: {
-            args: Prisma.EditTaskGroupByArgs<ExtArgs>
-            result: $Utils.Optional<EditTaskGroupByOutputType>[]
+            args: Prisma.InstructionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InstructionGroupByOutputType>[]
           }
           count: {
-            args: Prisma.EditTaskCountArgs<ExtArgs>
-            result: $Utils.Optional<EditTaskCountAggregateOutputType> | number
+            args: Prisma.InstructionCountArgs<ExtArgs>
+            result: $Utils.Optional<InstructionCountAggregateOutputType> | number
+          }
+        }
+      }
+      RenderJob: {
+        payload: Prisma.$RenderJobPayload<ExtArgs>
+        fields: Prisma.RenderJobFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RenderJobFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RenderJobPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RenderJobFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RenderJobPayload>
+          }
+          findFirst: {
+            args: Prisma.RenderJobFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RenderJobPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RenderJobFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RenderJobPayload>
+          }
+          findMany: {
+            args: Prisma.RenderJobFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RenderJobPayload>[]
+          }
+          create: {
+            args: Prisma.RenderJobCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RenderJobPayload>
+          }
+          createMany: {
+            args: Prisma.RenderJobCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RenderJobCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RenderJobPayload>[]
+          }
+          delete: {
+            args: Prisma.RenderJobDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RenderJobPayload>
+          }
+          update: {
+            args: Prisma.RenderJobUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RenderJobPayload>
+          }
+          deleteMany: {
+            args: Prisma.RenderJobDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RenderJobUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RenderJobUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RenderJobPayload>[]
+          }
+          upsert: {
+            args: Prisma.RenderJobUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RenderJobPayload>
+          }
+          aggregate: {
+            args: Prisma.RenderJobAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRenderJob>
+          }
+          groupBy: {
+            args: Prisma.RenderJobGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RenderJobGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RenderJobCountArgs<ExtArgs>
+            result: $Utils.Optional<RenderJobCountAggregateOutputType> | number
           }
         }
       }
@@ -882,7 +1000,8 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     video?: VideoOmit
-    editTask?: EditTaskOmit
+    instruction?: InstructionOmit
+    renderJob?: RenderJobOmit
   }
 
   /* Types for Logging */
@@ -977,11 +1096,15 @@ export namespace Prisma {
    */
 
   export type VideoCountOutputType = {
-    edits: number
+    instructions: number
+    renderJobs: number
+    copies: number
   }
 
   export type VideoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    edits?: boolean | VideoCountOutputTypeCountEditsArgs
+    instructions?: boolean | VideoCountOutputTypeCountInstructionsArgs
+    renderJobs?: boolean | VideoCountOutputTypeCountRenderJobsArgs
+    copies?: boolean | VideoCountOutputTypeCountCopiesArgs
   }
 
   // Custom InputTypes
@@ -998,8 +1121,22 @@ export namespace Prisma {
   /**
    * VideoCountOutputType without action
    */
-  export type VideoCountOutputTypeCountEditsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: EditTaskWhereInput
+  export type VideoCountOutputTypeCountInstructionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InstructionWhereInput
+  }
+
+  /**
+   * VideoCountOutputType without action
+   */
+  export type VideoCountOutputTypeCountRenderJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RenderJobWhereInput
+  }
+
+  /**
+   * VideoCountOutputType without action
+   */
+  export type VideoCountOutputTypeCountCopiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VideoWhereInput
   }
 
 
@@ -1038,6 +1175,7 @@ export namespace Prisma {
     status: $Enums.Status | null
     createdAt: Date | null
     updatedAt: Date | null
+    orignalId: string | null
   }
 
   export type VideoMaxAggregateOutputType = {
@@ -1049,6 +1187,7 @@ export namespace Prisma {
     status: $Enums.Status | null
     createdAt: Date | null
     updatedAt: Date | null
+    orignalId: string | null
   }
 
   export type VideoCountAggregateOutputType = {
@@ -1060,6 +1199,7 @@ export namespace Prisma {
     status: number
     createdAt: number
     updatedAt: number
+    orignalId: number
     _all: number
   }
 
@@ -1083,6 +1223,7 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    orignalId?: true
   }
 
   export type VideoMaxAggregateInputType = {
@@ -1094,6 +1235,7 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    orignalId?: true
   }
 
   export type VideoCountAggregateInputType = {
@@ -1105,6 +1247,7 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    orignalId?: true
     _all?: true
   }
 
@@ -1203,6 +1346,7 @@ export namespace Prisma {
     status: $Enums.Status
     createdAt: Date
     updatedAt: Date
+    orignalId: string | null
     _count: VideoCountAggregateOutputType | null
     _avg: VideoAvgAggregateOutputType | null
     _sum: VideoSumAggregateOutputType | null
@@ -1233,7 +1377,11 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    edits?: boolean | Video$editsArgs<ExtArgs>
+    orignalId?: boolean
+    instructions?: boolean | Video$instructionsArgs<ExtArgs>
+    renderJobs?: boolean | Video$renderJobsArgs<ExtArgs>
+    orignal?: boolean | Video$orignalArgs<ExtArgs>
+    copies?: boolean | Video$copiesArgs<ExtArgs>
     _count?: boolean | VideoCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["video"]>
 
@@ -1246,6 +1394,8 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    orignalId?: boolean
+    orignal?: boolean | Video$orignalArgs<ExtArgs>
   }, ExtArgs["result"]["video"]>
 
   export type VideoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1257,6 +1407,8 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    orignalId?: boolean
+    orignal?: boolean | Video$orignalArgs<ExtArgs>
   }, ExtArgs["result"]["video"]>
 
   export type VideoSelectScalar = {
@@ -1268,20 +1420,31 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    orignalId?: boolean
   }
 
-  export type VideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "filename" | "path" | "size" | "duration" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["video"]>
+  export type VideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "filename" | "path" | "size" | "duration" | "status" | "createdAt" | "updatedAt" | "orignalId", ExtArgs["result"]["video"]>
   export type VideoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    edits?: boolean | Video$editsArgs<ExtArgs>
+    instructions?: boolean | Video$instructionsArgs<ExtArgs>
+    renderJobs?: boolean | Video$renderJobsArgs<ExtArgs>
+    orignal?: boolean | Video$orignalArgs<ExtArgs>
+    copies?: boolean | Video$copiesArgs<ExtArgs>
     _count?: boolean | VideoCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type VideoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type VideoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type VideoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orignal?: boolean | Video$orignalArgs<ExtArgs>
+  }
+  export type VideoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orignal?: boolean | Video$orignalArgs<ExtArgs>
+  }
 
   export type $VideoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Video"
     objects: {
-      edits: Prisma.$EditTaskPayload<ExtArgs>[]
+      instructions: Prisma.$InstructionPayload<ExtArgs>[]
+      renderJobs: Prisma.$RenderJobPayload<ExtArgs>[]
+      orignal: Prisma.$VideoPayload<ExtArgs> | null
+      copies: Prisma.$VideoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1292,6 +1455,7 @@ export namespace Prisma {
       status: $Enums.Status
       createdAt: Date
       updatedAt: Date
+      orignalId: string | null
     }, ExtArgs["result"]["video"]>
     composites: {}
   }
@@ -1686,7 +1850,10 @@ export namespace Prisma {
    */
   export interface Prisma__VideoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    edits<T extends Video$editsArgs<ExtArgs> = {}>(args?: Subset<T, Video$editsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EditTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    instructions<T extends Video$instructionsArgs<ExtArgs> = {}>(args?: Subset<T, Video$instructionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstructionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    renderJobs<T extends Video$renderJobsArgs<ExtArgs> = {}>(args?: Subset<T, Video$renderJobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RenderJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orignal<T extends Video$orignalArgs<ExtArgs> = {}>(args?: Subset<T, Video$orignalArgs<ExtArgs>>): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    copies<T extends Video$copiesArgs<ExtArgs> = {}>(args?: Subset<T, Video$copiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1724,6 +1891,7 @@ export namespace Prisma {
     readonly status: FieldRef<"Video", 'Status'>
     readonly createdAt: FieldRef<"Video", 'DateTime'>
     readonly updatedAt: FieldRef<"Video", 'DateTime'>
+    readonly orignalId: FieldRef<"Video", 'String'>
   }
     
 
@@ -1973,6 +2141,10 @@ export namespace Prisma {
      */
     data: VideoCreateManyInput | VideoCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VideoIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2043,6 +2215,10 @@ export namespace Prisma {
      * Limit how many Videos to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VideoIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2112,27 +2288,94 @@ export namespace Prisma {
   }
 
   /**
-   * Video.edits
+   * Video.instructions
    */
-  export type Video$editsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Video$instructionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelect<ExtArgs> | null
+    select?: InstructionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskInclude<ExtArgs> | null
-    where?: EditTaskWhereInput
-    orderBy?: EditTaskOrderByWithRelationInput | EditTaskOrderByWithRelationInput[]
-    cursor?: EditTaskWhereUniqueInput
+    include?: InstructionInclude<ExtArgs> | null
+    where?: InstructionWhereInput
+    orderBy?: InstructionOrderByWithRelationInput | InstructionOrderByWithRelationInput[]
+    cursor?: InstructionWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: EditTaskScalarFieldEnum | EditTaskScalarFieldEnum[]
+    distinct?: InstructionScalarFieldEnum | InstructionScalarFieldEnum[]
+  }
+
+  /**
+   * Video.renderJobs
+   */
+  export type Video$renderJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobInclude<ExtArgs> | null
+    where?: RenderJobWhereInput
+    orderBy?: RenderJobOrderByWithRelationInput | RenderJobOrderByWithRelationInput[]
+    cursor?: RenderJobWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RenderJobScalarFieldEnum | RenderJobScalarFieldEnum[]
+  }
+
+  /**
+   * Video.orignal
+   */
+  export type Video$orignalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Video
+     */
+    select?: VideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Video
+     */
+    omit?: VideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VideoInclude<ExtArgs> | null
+    where?: VideoWhereInput
+  }
+
+  /**
+   * Video.copies
+   */
+  export type Video$copiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Video
+     */
+    select?: VideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Video
+     */
+    omit?: VideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VideoInclude<ExtArgs> | null
+    where?: VideoWhereInput
+    orderBy?: VideoOrderByWithRelationInput | VideoOrderByWithRelationInput[]
+    cursor?: VideoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VideoScalarFieldEnum | VideoScalarFieldEnum[]
   }
 
   /**
@@ -2155,370 +2398,392 @@ export namespace Prisma {
 
 
   /**
-   * Model EditTask
+   * Model Instruction
    */
 
-  export type AggregateEditTask = {
-    _count: EditTaskCountAggregateOutputType | null
-    _min: EditTaskMinAggregateOutputType | null
-    _max: EditTaskMaxAggregateOutputType | null
+  export type AggregateInstruction = {
+    _count: InstructionCountAggregateOutputType | null
+    _avg: InstructionAvgAggregateOutputType | null
+    _sum: InstructionSumAggregateOutputType | null
+    _min: InstructionMinAggregateOutputType | null
+    _max: InstructionMaxAggregateOutputType | null
   }
 
-  export type EditTaskMinAggregateOutputType = {
+  export type InstructionAvgAggregateOutputType = {
+    sequence: number | null
+  }
+
+  export type InstructionSumAggregateOutputType = {
+    sequence: number | null
+  }
+
+  export type InstructionMinAggregateOutputType = {
     id: string | null
     videoId: string | null
-    type: string | null
-    status: $Enums.Status | null
+    type: $Enums.InstructionType | null
+    sequence: number | null
     createdAt: Date | null
-    updatedAt: Date | null
   }
 
-  export type EditTaskMaxAggregateOutputType = {
+  export type InstructionMaxAggregateOutputType = {
     id: string | null
     videoId: string | null
-    type: string | null
-    status: $Enums.Status | null
+    type: $Enums.InstructionType | null
+    sequence: number | null
     createdAt: Date | null
-    updatedAt: Date | null
   }
 
-  export type EditTaskCountAggregateOutputType = {
+  export type InstructionCountAggregateOutputType = {
     id: number
     videoId: number
     type: number
     params: number
-    status: number
+    sequence: number
     createdAt: number
-    updatedAt: number
     _all: number
   }
 
 
-  export type EditTaskMinAggregateInputType = {
+  export type InstructionAvgAggregateInputType = {
+    sequence?: true
+  }
+
+  export type InstructionSumAggregateInputType = {
+    sequence?: true
+  }
+
+  export type InstructionMinAggregateInputType = {
     id?: true
     videoId?: true
     type?: true
-    status?: true
+    sequence?: true
     createdAt?: true
-    updatedAt?: true
   }
 
-  export type EditTaskMaxAggregateInputType = {
+  export type InstructionMaxAggregateInputType = {
     id?: true
     videoId?: true
     type?: true
-    status?: true
+    sequence?: true
     createdAt?: true
-    updatedAt?: true
   }
 
-  export type EditTaskCountAggregateInputType = {
+  export type InstructionCountAggregateInputType = {
     id?: true
     videoId?: true
     type?: true
     params?: true
-    status?: true
+    sequence?: true
     createdAt?: true
-    updatedAt?: true
     _all?: true
   }
 
-  export type EditTaskAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which EditTask to aggregate.
+     * Filter which Instruction to aggregate.
      */
-    where?: EditTaskWhereInput
+    where?: InstructionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of EditTasks to fetch.
+     * Determine the order of Instructions to fetch.
      */
-    orderBy?: EditTaskOrderByWithRelationInput | EditTaskOrderByWithRelationInput[]
+    orderBy?: InstructionOrderByWithRelationInput | InstructionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: EditTaskWhereUniqueInput
+    cursor?: InstructionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` EditTasks from the position of the cursor.
+     * Take `±n` Instructions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` EditTasks.
+     * Skip the first `n` Instructions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned EditTasks
+     * Count returned Instructions
     **/
-    _count?: true | EditTaskCountAggregateInputType
+    _count?: true | InstructionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InstructionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InstructionSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: EditTaskMinAggregateInputType
+    _min?: InstructionMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: EditTaskMaxAggregateInputType
+    _max?: InstructionMaxAggregateInputType
   }
 
-  export type GetEditTaskAggregateType<T extends EditTaskAggregateArgs> = {
-        [P in keyof T & keyof AggregateEditTask]: P extends '_count' | 'count'
+  export type GetInstructionAggregateType<T extends InstructionAggregateArgs> = {
+        [P in keyof T & keyof AggregateInstruction]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateEditTask[P]>
-      : GetScalarType<T[P], AggregateEditTask[P]>
+        : GetScalarType<T[P], AggregateInstruction[P]>
+      : GetScalarType<T[P], AggregateInstruction[P]>
   }
 
 
 
 
-  export type EditTaskGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: EditTaskWhereInput
-    orderBy?: EditTaskOrderByWithAggregationInput | EditTaskOrderByWithAggregationInput[]
-    by: EditTaskScalarFieldEnum[] | EditTaskScalarFieldEnum
-    having?: EditTaskScalarWhereWithAggregatesInput
+  export type InstructionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InstructionWhereInput
+    orderBy?: InstructionOrderByWithAggregationInput | InstructionOrderByWithAggregationInput[]
+    by: InstructionScalarFieldEnum[] | InstructionScalarFieldEnum
+    having?: InstructionScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: EditTaskCountAggregateInputType | true
-    _min?: EditTaskMinAggregateInputType
-    _max?: EditTaskMaxAggregateInputType
+    _count?: InstructionCountAggregateInputType | true
+    _avg?: InstructionAvgAggregateInputType
+    _sum?: InstructionSumAggregateInputType
+    _min?: InstructionMinAggregateInputType
+    _max?: InstructionMaxAggregateInputType
   }
 
-  export type EditTaskGroupByOutputType = {
+  export type InstructionGroupByOutputType = {
     id: string
     videoId: string
-    type: string
+    type: $Enums.InstructionType
     params: JsonValue
-    status: $Enums.Status
+    sequence: number
     createdAt: Date
-    updatedAt: Date
-    _count: EditTaskCountAggregateOutputType | null
-    _min: EditTaskMinAggregateOutputType | null
-    _max: EditTaskMaxAggregateOutputType | null
+    _count: InstructionCountAggregateOutputType | null
+    _avg: InstructionAvgAggregateOutputType | null
+    _sum: InstructionSumAggregateOutputType | null
+    _min: InstructionMinAggregateOutputType | null
+    _max: InstructionMaxAggregateOutputType | null
   }
 
-  type GetEditTaskGroupByPayload<T extends EditTaskGroupByArgs> = Prisma.PrismaPromise<
+  type GetInstructionGroupByPayload<T extends InstructionGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<EditTaskGroupByOutputType, T['by']> &
+      PickEnumerable<InstructionGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof EditTaskGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof InstructionGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], EditTaskGroupByOutputType[P]>
-            : GetScalarType<T[P], EditTaskGroupByOutputType[P]>
+              : GetScalarType<T[P], InstructionGroupByOutputType[P]>
+            : GetScalarType<T[P], InstructionGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type EditTaskSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type InstructionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     videoId?: boolean
     type?: boolean
     params?: boolean
-    status?: boolean
+    sequence?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
     video?: boolean | VideoDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["editTask"]>
+  }, ExtArgs["result"]["instruction"]>
 
-  export type EditTaskSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type InstructionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     videoId?: boolean
     type?: boolean
     params?: boolean
-    status?: boolean
+    sequence?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
     video?: boolean | VideoDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["editTask"]>
+  }, ExtArgs["result"]["instruction"]>
 
-  export type EditTaskSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type InstructionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     videoId?: boolean
     type?: boolean
     params?: boolean
-    status?: boolean
+    sequence?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
     video?: boolean | VideoDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["editTask"]>
+  }, ExtArgs["result"]["instruction"]>
 
-  export type EditTaskSelectScalar = {
+  export type InstructionSelectScalar = {
     id?: boolean
     videoId?: boolean
     type?: boolean
     params?: boolean
-    status?: boolean
+    sequence?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
   }
 
-  export type EditTaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "videoId" | "type" | "params" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["editTask"]>
-  export type EditTaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "videoId" | "type" | "params" | "sequence" | "createdAt", ExtArgs["result"]["instruction"]>
+  export type InstructionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     video?: boolean | VideoDefaultArgs<ExtArgs>
   }
-  export type EditTaskIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     video?: boolean | VideoDefaultArgs<ExtArgs>
   }
-  export type EditTaskIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     video?: boolean | VideoDefaultArgs<ExtArgs>
   }
 
-  export type $EditTaskPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "EditTask"
+  export type $InstructionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Instruction"
     objects: {
       video: Prisma.$VideoPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       videoId: string
-      type: string
+      type: $Enums.InstructionType
       params: Prisma.JsonValue
-      status: $Enums.Status
+      sequence: number
       createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["editTask"]>
+    }, ExtArgs["result"]["instruction"]>
     composites: {}
   }
 
-  type EditTaskGetPayload<S extends boolean | null | undefined | EditTaskDefaultArgs> = $Result.GetResult<Prisma.$EditTaskPayload, S>
+  type InstructionGetPayload<S extends boolean | null | undefined | InstructionDefaultArgs> = $Result.GetResult<Prisma.$InstructionPayload, S>
 
-  type EditTaskCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<EditTaskFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: EditTaskCountAggregateInputType | true
+  type InstructionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InstructionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InstructionCountAggregateInputType | true
     }
 
-  export interface EditTaskDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EditTask'], meta: { name: 'EditTask' } }
+  export interface InstructionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Instruction'], meta: { name: 'Instruction' } }
     /**
-     * Find zero or one EditTask that matches the filter.
-     * @param {EditTaskFindUniqueArgs} args - Arguments to find a EditTask
+     * Find zero or one Instruction that matches the filter.
+     * @param {InstructionFindUniqueArgs} args - Arguments to find a Instruction
      * @example
-     * // Get one EditTask
-     * const editTask = await prisma.editTask.findUnique({
+     * // Get one Instruction
+     * const instruction = await prisma.instruction.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends EditTaskFindUniqueArgs>(args: SelectSubset<T, EditTaskFindUniqueArgs<ExtArgs>>): Prisma__EditTaskClient<$Result.GetResult<Prisma.$EditTaskPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends InstructionFindUniqueArgs>(args: SelectSubset<T, InstructionFindUniqueArgs<ExtArgs>>): Prisma__InstructionClient<$Result.GetResult<Prisma.$InstructionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one EditTask that matches the filter or throw an error with `error.code='P2025'`
+     * Find one Instruction that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {EditTaskFindUniqueOrThrowArgs} args - Arguments to find a EditTask
+     * @param {InstructionFindUniqueOrThrowArgs} args - Arguments to find a Instruction
      * @example
-     * // Get one EditTask
-     * const editTask = await prisma.editTask.findUniqueOrThrow({
+     * // Get one Instruction
+     * const instruction = await prisma.instruction.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends EditTaskFindUniqueOrThrowArgs>(args: SelectSubset<T, EditTaskFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EditTaskClient<$Result.GetResult<Prisma.$EditTaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends InstructionFindUniqueOrThrowArgs>(args: SelectSubset<T, InstructionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InstructionClient<$Result.GetResult<Prisma.$InstructionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first EditTask that matches the filter.
+     * Find the first Instruction that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {EditTaskFindFirstArgs} args - Arguments to find a EditTask
+     * @param {InstructionFindFirstArgs} args - Arguments to find a Instruction
      * @example
-     * // Get one EditTask
-     * const editTask = await prisma.editTask.findFirst({
+     * // Get one Instruction
+     * const instruction = await prisma.instruction.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends EditTaskFindFirstArgs>(args?: SelectSubset<T, EditTaskFindFirstArgs<ExtArgs>>): Prisma__EditTaskClient<$Result.GetResult<Prisma.$EditTaskPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends InstructionFindFirstArgs>(args?: SelectSubset<T, InstructionFindFirstArgs<ExtArgs>>): Prisma__InstructionClient<$Result.GetResult<Prisma.$InstructionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first EditTask that matches the filter or
+     * Find the first Instruction that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {EditTaskFindFirstOrThrowArgs} args - Arguments to find a EditTask
+     * @param {InstructionFindFirstOrThrowArgs} args - Arguments to find a Instruction
      * @example
-     * // Get one EditTask
-     * const editTask = await prisma.editTask.findFirstOrThrow({
+     * // Get one Instruction
+     * const instruction = await prisma.instruction.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends EditTaskFindFirstOrThrowArgs>(args?: SelectSubset<T, EditTaskFindFirstOrThrowArgs<ExtArgs>>): Prisma__EditTaskClient<$Result.GetResult<Prisma.$EditTaskPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends InstructionFindFirstOrThrowArgs>(args?: SelectSubset<T, InstructionFindFirstOrThrowArgs<ExtArgs>>): Prisma__InstructionClient<$Result.GetResult<Prisma.$InstructionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more EditTasks that matches the filter.
+     * Find zero or more Instructions that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {EditTaskFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {InstructionFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all EditTasks
-     * const editTasks = await prisma.editTask.findMany()
+     * // Get all Instructions
+     * const instructions = await prisma.instruction.findMany()
      * 
-     * // Get first 10 EditTasks
-     * const editTasks = await prisma.editTask.findMany({ take: 10 })
+     * // Get first 10 Instructions
+     * const instructions = await prisma.instruction.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const editTaskWithIdOnly = await prisma.editTask.findMany({ select: { id: true } })
+     * const instructionWithIdOnly = await prisma.instruction.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends EditTaskFindManyArgs>(args?: SelectSubset<T, EditTaskFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EditTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends InstructionFindManyArgs>(args?: SelectSubset<T, InstructionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstructionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a EditTask.
-     * @param {EditTaskCreateArgs} args - Arguments to create a EditTask.
+     * Create a Instruction.
+     * @param {InstructionCreateArgs} args - Arguments to create a Instruction.
      * @example
-     * // Create one EditTask
-     * const EditTask = await prisma.editTask.create({
+     * // Create one Instruction
+     * const Instruction = await prisma.instruction.create({
      *   data: {
-     *     // ... data to create a EditTask
+     *     // ... data to create a Instruction
      *   }
      * })
      * 
      */
-    create<T extends EditTaskCreateArgs>(args: SelectSubset<T, EditTaskCreateArgs<ExtArgs>>): Prisma__EditTaskClient<$Result.GetResult<Prisma.$EditTaskPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends InstructionCreateArgs>(args: SelectSubset<T, InstructionCreateArgs<ExtArgs>>): Prisma__InstructionClient<$Result.GetResult<Prisma.$InstructionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many EditTasks.
-     * @param {EditTaskCreateManyArgs} args - Arguments to create many EditTasks.
+     * Create many Instructions.
+     * @param {InstructionCreateManyArgs} args - Arguments to create many Instructions.
      * @example
-     * // Create many EditTasks
-     * const editTask = await prisma.editTask.createMany({
+     * // Create many Instructions
+     * const instruction = await prisma.instruction.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends EditTaskCreateManyArgs>(args?: SelectSubset<T, EditTaskCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends InstructionCreateManyArgs>(args?: SelectSubset<T, InstructionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many EditTasks and returns the data saved in the database.
-     * @param {EditTaskCreateManyAndReturnArgs} args - Arguments to create many EditTasks.
+     * Create many Instructions and returns the data saved in the database.
+     * @param {InstructionCreateManyAndReturnArgs} args - Arguments to create many Instructions.
      * @example
-     * // Create many EditTasks
-     * const editTask = await prisma.editTask.createManyAndReturn({
+     * // Create many Instructions
+     * const instruction = await prisma.instruction.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many EditTasks and only return the `id`
-     * const editTaskWithIdOnly = await prisma.editTask.createManyAndReturn({
+     * // Create many Instructions and only return the `id`
+     * const instructionWithIdOnly = await prisma.instruction.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -2528,28 +2793,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends EditTaskCreateManyAndReturnArgs>(args?: SelectSubset<T, EditTaskCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EditTaskPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends InstructionCreateManyAndReturnArgs>(args?: SelectSubset<T, InstructionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstructionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a EditTask.
-     * @param {EditTaskDeleteArgs} args - Arguments to delete one EditTask.
+     * Delete a Instruction.
+     * @param {InstructionDeleteArgs} args - Arguments to delete one Instruction.
      * @example
-     * // Delete one EditTask
-     * const EditTask = await prisma.editTask.delete({
+     * // Delete one Instruction
+     * const Instruction = await prisma.instruction.delete({
      *   where: {
-     *     // ... filter to delete one EditTask
+     *     // ... filter to delete one Instruction
      *   }
      * })
      * 
      */
-    delete<T extends EditTaskDeleteArgs>(args: SelectSubset<T, EditTaskDeleteArgs<ExtArgs>>): Prisma__EditTaskClient<$Result.GetResult<Prisma.$EditTaskPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends InstructionDeleteArgs>(args: SelectSubset<T, InstructionDeleteArgs<ExtArgs>>): Prisma__InstructionClient<$Result.GetResult<Prisma.$InstructionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one EditTask.
-     * @param {EditTaskUpdateArgs} args - Arguments to update one EditTask.
+     * Update one Instruction.
+     * @param {InstructionUpdateArgs} args - Arguments to update one Instruction.
      * @example
-     * // Update one EditTask
-     * const editTask = await prisma.editTask.update({
+     * // Update one Instruction
+     * const instruction = await prisma.instruction.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -2559,30 +2824,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends EditTaskUpdateArgs>(args: SelectSubset<T, EditTaskUpdateArgs<ExtArgs>>): Prisma__EditTaskClient<$Result.GetResult<Prisma.$EditTaskPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends InstructionUpdateArgs>(args: SelectSubset<T, InstructionUpdateArgs<ExtArgs>>): Prisma__InstructionClient<$Result.GetResult<Prisma.$InstructionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more EditTasks.
-     * @param {EditTaskDeleteManyArgs} args - Arguments to filter EditTasks to delete.
+     * Delete zero or more Instructions.
+     * @param {InstructionDeleteManyArgs} args - Arguments to filter Instructions to delete.
      * @example
-     * // Delete a few EditTasks
-     * const { count } = await prisma.editTask.deleteMany({
+     * // Delete a few Instructions
+     * const { count } = await prisma.instruction.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends EditTaskDeleteManyArgs>(args?: SelectSubset<T, EditTaskDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends InstructionDeleteManyArgs>(args?: SelectSubset<T, InstructionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more EditTasks.
+     * Update zero or more Instructions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {EditTaskUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {InstructionUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many EditTasks
-     * const editTask = await prisma.editTask.updateMany({
+     * // Update many Instructions
+     * const instruction = await prisma.instruction.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -2592,14 +2857,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends EditTaskUpdateManyArgs>(args: SelectSubset<T, EditTaskUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends InstructionUpdateManyArgs>(args: SelectSubset<T, InstructionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more EditTasks and returns the data updated in the database.
-     * @param {EditTaskUpdateManyAndReturnArgs} args - Arguments to update many EditTasks.
+     * Update zero or more Instructions and returns the data updated in the database.
+     * @param {InstructionUpdateManyAndReturnArgs} args - Arguments to update many Instructions.
      * @example
-     * // Update many EditTasks
-     * const editTask = await prisma.editTask.updateManyAndReturn({
+     * // Update many Instructions
+     * const instruction = await prisma.instruction.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -2608,8 +2873,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more EditTasks and only return the `id`
-     * const editTaskWithIdOnly = await prisma.editTask.updateManyAndReturn({
+     * // Update zero or more Instructions and only return the `id`
+     * const instructionWithIdOnly = await prisma.instruction.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -2622,56 +2887,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends EditTaskUpdateManyAndReturnArgs>(args: SelectSubset<T, EditTaskUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EditTaskPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends InstructionUpdateManyAndReturnArgs>(args: SelectSubset<T, InstructionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstructionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one EditTask.
-     * @param {EditTaskUpsertArgs} args - Arguments to update or create a EditTask.
+     * Create or update one Instruction.
+     * @param {InstructionUpsertArgs} args - Arguments to update or create a Instruction.
      * @example
-     * // Update or create a EditTask
-     * const editTask = await prisma.editTask.upsert({
+     * // Update or create a Instruction
+     * const instruction = await prisma.instruction.upsert({
      *   create: {
-     *     // ... data to create a EditTask
+     *     // ... data to create a Instruction
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the EditTask we want to update
+     *     // ... the filter for the Instruction we want to update
      *   }
      * })
      */
-    upsert<T extends EditTaskUpsertArgs>(args: SelectSubset<T, EditTaskUpsertArgs<ExtArgs>>): Prisma__EditTaskClient<$Result.GetResult<Prisma.$EditTaskPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends InstructionUpsertArgs>(args: SelectSubset<T, InstructionUpsertArgs<ExtArgs>>): Prisma__InstructionClient<$Result.GetResult<Prisma.$InstructionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of EditTasks.
+     * Count the number of Instructions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {EditTaskCountArgs} args - Arguments to filter EditTasks to count.
+     * @param {InstructionCountArgs} args - Arguments to filter Instructions to count.
      * @example
-     * // Count the number of EditTasks
-     * const count = await prisma.editTask.count({
+     * // Count the number of Instructions
+     * const count = await prisma.instruction.count({
      *   where: {
-     *     // ... the filter for the EditTasks we want to count
+     *     // ... the filter for the Instructions we want to count
      *   }
      * })
     **/
-    count<T extends EditTaskCountArgs>(
-      args?: Subset<T, EditTaskCountArgs>,
+    count<T extends InstructionCountArgs>(
+      args?: Subset<T, InstructionCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], EditTaskCountAggregateOutputType>
+          : GetScalarType<T['select'], InstructionCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a EditTask.
+     * Allows you to perform aggregations operations on a Instruction.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {EditTaskAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {InstructionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -2691,13 +2956,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends EditTaskAggregateArgs>(args: Subset<T, EditTaskAggregateArgs>): Prisma.PrismaPromise<GetEditTaskAggregateType<T>>
+    aggregate<T extends InstructionAggregateArgs>(args: Subset<T, InstructionAggregateArgs>): Prisma.PrismaPromise<GetInstructionAggregateType<T>>
 
     /**
-     * Group by EditTask.
+     * Group by Instruction.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {EditTaskGroupByArgs} args - Group by arguments.
+     * @param {InstructionGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -2712,14 +2977,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends EditTaskGroupByArgs,
+      T extends InstructionGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: EditTaskGroupByArgs['orderBy'] }
-        : { orderBy?: EditTaskGroupByArgs['orderBy'] },
+        ? { orderBy: InstructionGroupByArgs['orderBy'] }
+        : { orderBy?: InstructionGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -2768,20 +3033,20 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, EditTaskGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEditTaskGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, InstructionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInstructionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the EditTask model
+   * Fields of the Instruction model
    */
-  readonly fields: EditTaskFieldRefs;
+  readonly fields: InstructionFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for EditTask.
+   * The delegate class that acts as a "Promise-like" for Instruction.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__EditTaskClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__InstructionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     video<T extends VideoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VideoDefaultArgs<ExtArgs>>): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
@@ -2810,427 +3075,1523 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the EditTask model
+   * Fields of the Instruction model
    */
-  interface EditTaskFieldRefs {
-    readonly id: FieldRef<"EditTask", 'String'>
-    readonly videoId: FieldRef<"EditTask", 'String'>
-    readonly type: FieldRef<"EditTask", 'String'>
-    readonly params: FieldRef<"EditTask", 'Json'>
-    readonly status: FieldRef<"EditTask", 'Status'>
-    readonly createdAt: FieldRef<"EditTask", 'DateTime'>
-    readonly updatedAt: FieldRef<"EditTask", 'DateTime'>
+  interface InstructionFieldRefs {
+    readonly id: FieldRef<"Instruction", 'String'>
+    readonly videoId: FieldRef<"Instruction", 'String'>
+    readonly type: FieldRef<"Instruction", 'InstructionType'>
+    readonly params: FieldRef<"Instruction", 'Json'>
+    readonly sequence: FieldRef<"Instruction", 'Int'>
+    readonly createdAt: FieldRef<"Instruction", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * EditTask findUnique
+   * Instruction findUnique
    */
-  export type EditTaskFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelect<ExtArgs> | null
+    select?: InstructionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskInclude<ExtArgs> | null
+    include?: InstructionInclude<ExtArgs> | null
     /**
-     * Filter, which EditTask to fetch.
+     * Filter, which Instruction to fetch.
      */
-    where: EditTaskWhereUniqueInput
+    where: InstructionWhereUniqueInput
   }
 
   /**
-   * EditTask findUniqueOrThrow
+   * Instruction findUniqueOrThrow
    */
-  export type EditTaskFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelect<ExtArgs> | null
+    select?: InstructionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskInclude<ExtArgs> | null
+    include?: InstructionInclude<ExtArgs> | null
     /**
-     * Filter, which EditTask to fetch.
+     * Filter, which Instruction to fetch.
      */
-    where: EditTaskWhereUniqueInput
+    where: InstructionWhereUniqueInput
   }
 
   /**
-   * EditTask findFirst
+   * Instruction findFirst
    */
-  export type EditTaskFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelect<ExtArgs> | null
+    select?: InstructionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskInclude<ExtArgs> | null
+    include?: InstructionInclude<ExtArgs> | null
     /**
-     * Filter, which EditTask to fetch.
+     * Filter, which Instruction to fetch.
      */
-    where?: EditTaskWhereInput
+    where?: InstructionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of EditTasks to fetch.
+     * Determine the order of Instructions to fetch.
      */
-    orderBy?: EditTaskOrderByWithRelationInput | EditTaskOrderByWithRelationInput[]
+    orderBy?: InstructionOrderByWithRelationInput | InstructionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for EditTasks.
+     * Sets the position for searching for Instructions.
      */
-    cursor?: EditTaskWhereUniqueInput
+    cursor?: InstructionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` EditTasks from the position of the cursor.
+     * Take `±n` Instructions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` EditTasks.
+     * Skip the first `n` Instructions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of EditTasks.
+     * Filter by unique combinations of Instructions.
      */
-    distinct?: EditTaskScalarFieldEnum | EditTaskScalarFieldEnum[]
+    distinct?: InstructionScalarFieldEnum | InstructionScalarFieldEnum[]
   }
 
   /**
-   * EditTask findFirstOrThrow
+   * Instruction findFirstOrThrow
    */
-  export type EditTaskFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelect<ExtArgs> | null
+    select?: InstructionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskInclude<ExtArgs> | null
+    include?: InstructionInclude<ExtArgs> | null
     /**
-     * Filter, which EditTask to fetch.
+     * Filter, which Instruction to fetch.
      */
-    where?: EditTaskWhereInput
+    where?: InstructionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of EditTasks to fetch.
+     * Determine the order of Instructions to fetch.
      */
-    orderBy?: EditTaskOrderByWithRelationInput | EditTaskOrderByWithRelationInput[]
+    orderBy?: InstructionOrderByWithRelationInput | InstructionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for EditTasks.
+     * Sets the position for searching for Instructions.
      */
-    cursor?: EditTaskWhereUniqueInput
+    cursor?: InstructionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` EditTasks from the position of the cursor.
+     * Take `±n` Instructions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` EditTasks.
+     * Skip the first `n` Instructions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of EditTasks.
+     * Filter by unique combinations of Instructions.
      */
-    distinct?: EditTaskScalarFieldEnum | EditTaskScalarFieldEnum[]
+    distinct?: InstructionScalarFieldEnum | InstructionScalarFieldEnum[]
   }
 
   /**
-   * EditTask findMany
+   * Instruction findMany
    */
-  export type EditTaskFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelect<ExtArgs> | null
+    select?: InstructionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskInclude<ExtArgs> | null
+    include?: InstructionInclude<ExtArgs> | null
     /**
-     * Filter, which EditTasks to fetch.
+     * Filter, which Instructions to fetch.
      */
-    where?: EditTaskWhereInput
+    where?: InstructionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of EditTasks to fetch.
+     * Determine the order of Instructions to fetch.
      */
-    orderBy?: EditTaskOrderByWithRelationInput | EditTaskOrderByWithRelationInput[]
+    orderBy?: InstructionOrderByWithRelationInput | InstructionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing EditTasks.
+     * Sets the position for listing Instructions.
      */
-    cursor?: EditTaskWhereUniqueInput
+    cursor?: InstructionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` EditTasks from the position of the cursor.
+     * Take `±n` Instructions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` EditTasks.
+     * Skip the first `n` Instructions.
      */
     skip?: number
-    distinct?: EditTaskScalarFieldEnum | EditTaskScalarFieldEnum[]
+    distinct?: InstructionScalarFieldEnum | InstructionScalarFieldEnum[]
   }
 
   /**
-   * EditTask create
+   * Instruction create
    */
-  export type EditTaskCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelect<ExtArgs> | null
+    select?: InstructionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskInclude<ExtArgs> | null
+    include?: InstructionInclude<ExtArgs> | null
     /**
-     * The data needed to create a EditTask.
+     * The data needed to create a Instruction.
      */
-    data: XOR<EditTaskCreateInput, EditTaskUncheckedCreateInput>
+    data: XOR<InstructionCreateInput, InstructionUncheckedCreateInput>
   }
 
   /**
-   * EditTask createMany
+   * Instruction createMany
    */
-  export type EditTaskCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many EditTasks.
+     * The data used to create many Instructions.
      */
-    data: EditTaskCreateManyInput | EditTaskCreateManyInput[]
+    data: InstructionCreateManyInput | InstructionCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * EditTask createManyAndReturn
+   * Instruction createManyAndReturn
    */
-  export type EditTaskCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelectCreateManyAndReturn<ExtArgs> | null
+    select?: InstructionSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
-     * The data used to create many EditTasks.
+     * The data used to create many Instructions.
      */
-    data: EditTaskCreateManyInput | EditTaskCreateManyInput[]
+    data: InstructionCreateManyInput | InstructionCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: InstructionIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * EditTask update
+   * Instruction update
    */
-  export type EditTaskUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelect<ExtArgs> | null
+    select?: InstructionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskInclude<ExtArgs> | null
+    include?: InstructionInclude<ExtArgs> | null
     /**
-     * The data needed to update a EditTask.
+     * The data needed to update a Instruction.
      */
-    data: XOR<EditTaskUpdateInput, EditTaskUncheckedUpdateInput>
+    data: XOR<InstructionUpdateInput, InstructionUncheckedUpdateInput>
     /**
-     * Choose, which EditTask to update.
+     * Choose, which Instruction to update.
      */
-    where: EditTaskWhereUniqueInput
+    where: InstructionWhereUniqueInput
   }
 
   /**
-   * EditTask updateMany
+   * Instruction updateMany
    */
-  export type EditTaskUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update EditTasks.
+     * The data used to update Instructions.
      */
-    data: XOR<EditTaskUpdateManyMutationInput, EditTaskUncheckedUpdateManyInput>
+    data: XOR<InstructionUpdateManyMutationInput, InstructionUncheckedUpdateManyInput>
     /**
-     * Filter which EditTasks to update
+     * Filter which Instructions to update
      */
-    where?: EditTaskWhereInput
+    where?: InstructionWhereInput
     /**
-     * Limit how many EditTasks to update.
+     * Limit how many Instructions to update.
      */
     limit?: number
   }
 
   /**
-   * EditTask updateManyAndReturn
+   * Instruction updateManyAndReturn
    */
-  export type EditTaskUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: InstructionSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
-     * The data used to update EditTasks.
+     * The data used to update Instructions.
      */
-    data: XOR<EditTaskUpdateManyMutationInput, EditTaskUncheckedUpdateManyInput>
+    data: XOR<InstructionUpdateManyMutationInput, InstructionUncheckedUpdateManyInput>
     /**
-     * Filter which EditTasks to update
+     * Filter which Instructions to update
      */
-    where?: EditTaskWhereInput
+    where?: InstructionWhereInput
     /**
-     * Limit how many EditTasks to update.
+     * Limit how many Instructions to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: InstructionIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * EditTask upsert
+   * Instruction upsert
    */
-  export type EditTaskUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelect<ExtArgs> | null
+    select?: InstructionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskInclude<ExtArgs> | null
+    include?: InstructionInclude<ExtArgs> | null
     /**
-     * The filter to search for the EditTask to update in case it exists.
+     * The filter to search for the Instruction to update in case it exists.
      */
-    where: EditTaskWhereUniqueInput
+    where: InstructionWhereUniqueInput
     /**
-     * In case the EditTask found by the `where` argument doesn't exist, create a new EditTask with this data.
+     * In case the Instruction found by the `where` argument doesn't exist, create a new Instruction with this data.
      */
-    create: XOR<EditTaskCreateInput, EditTaskUncheckedCreateInput>
+    create: XOR<InstructionCreateInput, InstructionUncheckedCreateInput>
     /**
-     * In case the EditTask was found with the provided `where` argument, update it with this data.
+     * In case the Instruction was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<EditTaskUpdateInput, EditTaskUncheckedUpdateInput>
+    update: XOR<InstructionUpdateInput, InstructionUncheckedUpdateInput>
   }
 
   /**
-   * EditTask delete
+   * Instruction delete
    */
-  export type EditTaskDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelect<ExtArgs> | null
+    select?: InstructionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskInclude<ExtArgs> | null
+    include?: InstructionInclude<ExtArgs> | null
     /**
-     * Filter which EditTask to delete.
+     * Filter which Instruction to delete.
      */
-    where: EditTaskWhereUniqueInput
+    where: InstructionWhereUniqueInput
   }
 
   /**
-   * EditTask deleteMany
+   * Instruction deleteMany
    */
-  export type EditTaskDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which EditTasks to delete
+     * Filter which Instructions to delete
      */
-    where?: EditTaskWhereInput
+    where?: InstructionWhereInput
     /**
-     * Limit how many EditTasks to delete.
+     * Limit how many Instructions to delete.
      */
     limit?: number
   }
 
   /**
-   * EditTask without action
+   * Instruction without action
    */
-  export type EditTaskDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type InstructionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the EditTask
+     * Select specific fields to fetch from the Instruction
      */
-    select?: EditTaskSelect<ExtArgs> | null
+    select?: InstructionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the EditTask
+     * Omit specific fields from the Instruction
      */
-    omit?: EditTaskOmit<ExtArgs> | null
+    omit?: InstructionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: EditTaskInclude<ExtArgs> | null
+    include?: InstructionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RenderJob
+   */
+
+  export type AggregateRenderJob = {
+    _count: RenderJobCountAggregateOutputType | null
+    _min: RenderJobMinAggregateOutputType | null
+    _max: RenderJobMaxAggregateOutputType | null
+  }
+
+  export type RenderJobMinAggregateOutputType = {
+    id: string | null
+    videoId: string | null
+    status: $Enums.JobStatus | null
+    outputUrl: string | null
+    errorMessage: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RenderJobMaxAggregateOutputType = {
+    id: string | null
+    videoId: string | null
+    status: $Enums.JobStatus | null
+    outputUrl: string | null
+    errorMessage: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RenderJobCountAggregateOutputType = {
+    id: number
+    videoId: number
+    status: number
+    outputUrl: number
+    errorMessage: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type RenderJobMinAggregateInputType = {
+    id?: true
+    videoId?: true
+    status?: true
+    outputUrl?: true
+    errorMessage?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RenderJobMaxAggregateInputType = {
+    id?: true
+    videoId?: true
+    status?: true
+    outputUrl?: true
+    errorMessage?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RenderJobCountAggregateInputType = {
+    id?: true
+    videoId?: true
+    status?: true
+    outputUrl?: true
+    errorMessage?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type RenderJobAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RenderJob to aggregate.
+     */
+    where?: RenderJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RenderJobs to fetch.
+     */
+    orderBy?: RenderJobOrderByWithRelationInput | RenderJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RenderJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RenderJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RenderJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RenderJobs
+    **/
+    _count?: true | RenderJobCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RenderJobMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RenderJobMaxAggregateInputType
+  }
+
+  export type GetRenderJobAggregateType<T extends RenderJobAggregateArgs> = {
+        [P in keyof T & keyof AggregateRenderJob]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRenderJob[P]>
+      : GetScalarType<T[P], AggregateRenderJob[P]>
+  }
+
+
+
+
+  export type RenderJobGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RenderJobWhereInput
+    orderBy?: RenderJobOrderByWithAggregationInput | RenderJobOrderByWithAggregationInput[]
+    by: RenderJobScalarFieldEnum[] | RenderJobScalarFieldEnum
+    having?: RenderJobScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RenderJobCountAggregateInputType | true
+    _min?: RenderJobMinAggregateInputType
+    _max?: RenderJobMaxAggregateInputType
+  }
+
+  export type RenderJobGroupByOutputType = {
+    id: string
+    videoId: string
+    status: $Enums.JobStatus
+    outputUrl: string | null
+    errorMessage: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: RenderJobCountAggregateOutputType | null
+    _min: RenderJobMinAggregateOutputType | null
+    _max: RenderJobMaxAggregateOutputType | null
+  }
+
+  type GetRenderJobGroupByPayload<T extends RenderJobGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RenderJobGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RenderJobGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RenderJobGroupByOutputType[P]>
+            : GetScalarType<T[P], RenderJobGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RenderJobSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    videoId?: boolean
+    status?: boolean
+    outputUrl?: boolean
+    errorMessage?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    video?: boolean | VideoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["renderJob"]>
+
+  export type RenderJobSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    videoId?: boolean
+    status?: boolean
+    outputUrl?: boolean
+    errorMessage?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    video?: boolean | VideoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["renderJob"]>
+
+  export type RenderJobSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    videoId?: boolean
+    status?: boolean
+    outputUrl?: boolean
+    errorMessage?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    video?: boolean | VideoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["renderJob"]>
+
+  export type RenderJobSelectScalar = {
+    id?: boolean
+    videoId?: boolean
+    status?: boolean
+    outputUrl?: boolean
+    errorMessage?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type RenderJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "videoId" | "status" | "outputUrl" | "errorMessage" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["renderJob"]>
+  export type RenderJobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    video?: boolean | VideoDefaultArgs<ExtArgs>
+  }
+  export type RenderJobIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    video?: boolean | VideoDefaultArgs<ExtArgs>
+  }
+  export type RenderJobIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    video?: boolean | VideoDefaultArgs<ExtArgs>
+  }
+
+  export type $RenderJobPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RenderJob"
+    objects: {
+      video: Prisma.$VideoPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      videoId: string
+      status: $Enums.JobStatus
+      outputUrl: string | null
+      errorMessage: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["renderJob"]>
+    composites: {}
+  }
+
+  type RenderJobGetPayload<S extends boolean | null | undefined | RenderJobDefaultArgs> = $Result.GetResult<Prisma.$RenderJobPayload, S>
+
+  type RenderJobCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RenderJobFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RenderJobCountAggregateInputType | true
+    }
+
+  export interface RenderJobDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RenderJob'], meta: { name: 'RenderJob' } }
+    /**
+     * Find zero or one RenderJob that matches the filter.
+     * @param {RenderJobFindUniqueArgs} args - Arguments to find a RenderJob
+     * @example
+     * // Get one RenderJob
+     * const renderJob = await prisma.renderJob.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RenderJobFindUniqueArgs>(args: SelectSubset<T, RenderJobFindUniqueArgs<ExtArgs>>): Prisma__RenderJobClient<$Result.GetResult<Prisma.$RenderJobPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RenderJob that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RenderJobFindUniqueOrThrowArgs} args - Arguments to find a RenderJob
+     * @example
+     * // Get one RenderJob
+     * const renderJob = await prisma.renderJob.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RenderJobFindUniqueOrThrowArgs>(args: SelectSubset<T, RenderJobFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RenderJobClient<$Result.GetResult<Prisma.$RenderJobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RenderJob that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RenderJobFindFirstArgs} args - Arguments to find a RenderJob
+     * @example
+     * // Get one RenderJob
+     * const renderJob = await prisma.renderJob.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RenderJobFindFirstArgs>(args?: SelectSubset<T, RenderJobFindFirstArgs<ExtArgs>>): Prisma__RenderJobClient<$Result.GetResult<Prisma.$RenderJobPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RenderJob that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RenderJobFindFirstOrThrowArgs} args - Arguments to find a RenderJob
+     * @example
+     * // Get one RenderJob
+     * const renderJob = await prisma.renderJob.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RenderJobFindFirstOrThrowArgs>(args?: SelectSubset<T, RenderJobFindFirstOrThrowArgs<ExtArgs>>): Prisma__RenderJobClient<$Result.GetResult<Prisma.$RenderJobPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RenderJobs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RenderJobFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RenderJobs
+     * const renderJobs = await prisma.renderJob.findMany()
+     * 
+     * // Get first 10 RenderJobs
+     * const renderJobs = await prisma.renderJob.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const renderJobWithIdOnly = await prisma.renderJob.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RenderJobFindManyArgs>(args?: SelectSubset<T, RenderJobFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RenderJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RenderJob.
+     * @param {RenderJobCreateArgs} args - Arguments to create a RenderJob.
+     * @example
+     * // Create one RenderJob
+     * const RenderJob = await prisma.renderJob.create({
+     *   data: {
+     *     // ... data to create a RenderJob
+     *   }
+     * })
+     * 
+     */
+    create<T extends RenderJobCreateArgs>(args: SelectSubset<T, RenderJobCreateArgs<ExtArgs>>): Prisma__RenderJobClient<$Result.GetResult<Prisma.$RenderJobPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RenderJobs.
+     * @param {RenderJobCreateManyArgs} args - Arguments to create many RenderJobs.
+     * @example
+     * // Create many RenderJobs
+     * const renderJob = await prisma.renderJob.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RenderJobCreateManyArgs>(args?: SelectSubset<T, RenderJobCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RenderJobs and returns the data saved in the database.
+     * @param {RenderJobCreateManyAndReturnArgs} args - Arguments to create many RenderJobs.
+     * @example
+     * // Create many RenderJobs
+     * const renderJob = await prisma.renderJob.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RenderJobs and only return the `id`
+     * const renderJobWithIdOnly = await prisma.renderJob.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RenderJobCreateManyAndReturnArgs>(args?: SelectSubset<T, RenderJobCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RenderJobPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RenderJob.
+     * @param {RenderJobDeleteArgs} args - Arguments to delete one RenderJob.
+     * @example
+     * // Delete one RenderJob
+     * const RenderJob = await prisma.renderJob.delete({
+     *   where: {
+     *     // ... filter to delete one RenderJob
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RenderJobDeleteArgs>(args: SelectSubset<T, RenderJobDeleteArgs<ExtArgs>>): Prisma__RenderJobClient<$Result.GetResult<Prisma.$RenderJobPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RenderJob.
+     * @param {RenderJobUpdateArgs} args - Arguments to update one RenderJob.
+     * @example
+     * // Update one RenderJob
+     * const renderJob = await prisma.renderJob.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RenderJobUpdateArgs>(args: SelectSubset<T, RenderJobUpdateArgs<ExtArgs>>): Prisma__RenderJobClient<$Result.GetResult<Prisma.$RenderJobPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RenderJobs.
+     * @param {RenderJobDeleteManyArgs} args - Arguments to filter RenderJobs to delete.
+     * @example
+     * // Delete a few RenderJobs
+     * const { count } = await prisma.renderJob.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RenderJobDeleteManyArgs>(args?: SelectSubset<T, RenderJobDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RenderJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RenderJobUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RenderJobs
+     * const renderJob = await prisma.renderJob.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RenderJobUpdateManyArgs>(args: SelectSubset<T, RenderJobUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RenderJobs and returns the data updated in the database.
+     * @param {RenderJobUpdateManyAndReturnArgs} args - Arguments to update many RenderJobs.
+     * @example
+     * // Update many RenderJobs
+     * const renderJob = await prisma.renderJob.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RenderJobs and only return the `id`
+     * const renderJobWithIdOnly = await prisma.renderJob.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RenderJobUpdateManyAndReturnArgs>(args: SelectSubset<T, RenderJobUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RenderJobPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RenderJob.
+     * @param {RenderJobUpsertArgs} args - Arguments to update or create a RenderJob.
+     * @example
+     * // Update or create a RenderJob
+     * const renderJob = await prisma.renderJob.upsert({
+     *   create: {
+     *     // ... data to create a RenderJob
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RenderJob we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RenderJobUpsertArgs>(args: SelectSubset<T, RenderJobUpsertArgs<ExtArgs>>): Prisma__RenderJobClient<$Result.GetResult<Prisma.$RenderJobPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RenderJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RenderJobCountArgs} args - Arguments to filter RenderJobs to count.
+     * @example
+     * // Count the number of RenderJobs
+     * const count = await prisma.renderJob.count({
+     *   where: {
+     *     // ... the filter for the RenderJobs we want to count
+     *   }
+     * })
+    **/
+    count<T extends RenderJobCountArgs>(
+      args?: Subset<T, RenderJobCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RenderJobCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RenderJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RenderJobAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RenderJobAggregateArgs>(args: Subset<T, RenderJobAggregateArgs>): Prisma.PrismaPromise<GetRenderJobAggregateType<T>>
+
+    /**
+     * Group by RenderJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RenderJobGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RenderJobGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RenderJobGroupByArgs['orderBy'] }
+        : { orderBy?: RenderJobGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RenderJobGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRenderJobGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RenderJob model
+   */
+  readonly fields: RenderJobFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RenderJob.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RenderJobClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    video<T extends VideoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VideoDefaultArgs<ExtArgs>>): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RenderJob model
+   */
+  interface RenderJobFieldRefs {
+    readonly id: FieldRef<"RenderJob", 'String'>
+    readonly videoId: FieldRef<"RenderJob", 'String'>
+    readonly status: FieldRef<"RenderJob", 'JobStatus'>
+    readonly outputUrl: FieldRef<"RenderJob", 'String'>
+    readonly errorMessage: FieldRef<"RenderJob", 'String'>
+    readonly isActive: FieldRef<"RenderJob", 'Boolean'>
+    readonly createdAt: FieldRef<"RenderJob", 'DateTime'>
+    readonly updatedAt: FieldRef<"RenderJob", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RenderJob findUnique
+   */
+  export type RenderJobFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobInclude<ExtArgs> | null
+    /**
+     * Filter, which RenderJob to fetch.
+     */
+    where: RenderJobWhereUniqueInput
+  }
+
+  /**
+   * RenderJob findUniqueOrThrow
+   */
+  export type RenderJobFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobInclude<ExtArgs> | null
+    /**
+     * Filter, which RenderJob to fetch.
+     */
+    where: RenderJobWhereUniqueInput
+  }
+
+  /**
+   * RenderJob findFirst
+   */
+  export type RenderJobFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobInclude<ExtArgs> | null
+    /**
+     * Filter, which RenderJob to fetch.
+     */
+    where?: RenderJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RenderJobs to fetch.
+     */
+    orderBy?: RenderJobOrderByWithRelationInput | RenderJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RenderJobs.
+     */
+    cursor?: RenderJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RenderJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RenderJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RenderJobs.
+     */
+    distinct?: RenderJobScalarFieldEnum | RenderJobScalarFieldEnum[]
+  }
+
+  /**
+   * RenderJob findFirstOrThrow
+   */
+  export type RenderJobFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobInclude<ExtArgs> | null
+    /**
+     * Filter, which RenderJob to fetch.
+     */
+    where?: RenderJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RenderJobs to fetch.
+     */
+    orderBy?: RenderJobOrderByWithRelationInput | RenderJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RenderJobs.
+     */
+    cursor?: RenderJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RenderJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RenderJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RenderJobs.
+     */
+    distinct?: RenderJobScalarFieldEnum | RenderJobScalarFieldEnum[]
+  }
+
+  /**
+   * RenderJob findMany
+   */
+  export type RenderJobFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobInclude<ExtArgs> | null
+    /**
+     * Filter, which RenderJobs to fetch.
+     */
+    where?: RenderJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RenderJobs to fetch.
+     */
+    orderBy?: RenderJobOrderByWithRelationInput | RenderJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RenderJobs.
+     */
+    cursor?: RenderJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RenderJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RenderJobs.
+     */
+    skip?: number
+    distinct?: RenderJobScalarFieldEnum | RenderJobScalarFieldEnum[]
+  }
+
+  /**
+   * RenderJob create
+   */
+  export type RenderJobCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RenderJob.
+     */
+    data: XOR<RenderJobCreateInput, RenderJobUncheckedCreateInput>
+  }
+
+  /**
+   * RenderJob createMany
+   */
+  export type RenderJobCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RenderJobs.
+     */
+    data: RenderJobCreateManyInput | RenderJobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RenderJob createManyAndReturn
+   */
+  export type RenderJobCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * The data used to create many RenderJobs.
+     */
+    data: RenderJobCreateManyInput | RenderJobCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RenderJob update
+   */
+  export type RenderJobUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RenderJob.
+     */
+    data: XOR<RenderJobUpdateInput, RenderJobUncheckedUpdateInput>
+    /**
+     * Choose, which RenderJob to update.
+     */
+    where: RenderJobWhereUniqueInput
+  }
+
+  /**
+   * RenderJob updateMany
+   */
+  export type RenderJobUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RenderJobs.
+     */
+    data: XOR<RenderJobUpdateManyMutationInput, RenderJobUncheckedUpdateManyInput>
+    /**
+     * Filter which RenderJobs to update
+     */
+    where?: RenderJobWhereInput
+    /**
+     * Limit how many RenderJobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RenderJob updateManyAndReturn
+   */
+  export type RenderJobUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * The data used to update RenderJobs.
+     */
+    data: XOR<RenderJobUpdateManyMutationInput, RenderJobUncheckedUpdateManyInput>
+    /**
+     * Filter which RenderJobs to update
+     */
+    where?: RenderJobWhereInput
+    /**
+     * Limit how many RenderJobs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RenderJob upsert
+   */
+  export type RenderJobUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RenderJob to update in case it exists.
+     */
+    where: RenderJobWhereUniqueInput
+    /**
+     * In case the RenderJob found by the `where` argument doesn't exist, create a new RenderJob with this data.
+     */
+    create: XOR<RenderJobCreateInput, RenderJobUncheckedCreateInput>
+    /**
+     * In case the RenderJob was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RenderJobUpdateInput, RenderJobUncheckedUpdateInput>
+  }
+
+  /**
+   * RenderJob delete
+   */
+  export type RenderJobDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobInclude<ExtArgs> | null
+    /**
+     * Filter which RenderJob to delete.
+     */
+    where: RenderJobWhereUniqueInput
+  }
+
+  /**
+   * RenderJob deleteMany
+   */
+  export type RenderJobDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RenderJobs to delete
+     */
+    where?: RenderJobWhereInput
+    /**
+     * Limit how many RenderJobs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RenderJob without action
+   */
+  export type RenderJobDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RenderJob
+     */
+    select?: RenderJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RenderJob
+     */
+    omit?: RenderJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RenderJobInclude<ExtArgs> | null
   }
 
 
@@ -3256,23 +4617,37 @@ export namespace Prisma {
     duration: 'duration',
     status: 'status',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    orignalId: 'orignalId'
   };
 
   export type VideoScalarFieldEnum = (typeof VideoScalarFieldEnum)[keyof typeof VideoScalarFieldEnum]
 
 
-  export const EditTaskScalarFieldEnum: {
+  export const InstructionScalarFieldEnum: {
     id: 'id',
     videoId: 'videoId',
     type: 'type',
     params: 'params',
+    sequence: 'sequence',
+    createdAt: 'createdAt'
+  };
+
+  export type InstructionScalarFieldEnum = (typeof InstructionScalarFieldEnum)[keyof typeof InstructionScalarFieldEnum]
+
+
+  export const RenderJobScalarFieldEnum: {
+    id: 'id',
+    videoId: 'videoId',
     status: 'status',
+    outputUrl: 'outputUrl',
+    errorMessage: 'errorMessage',
+    isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
-  export type EditTaskScalarFieldEnum = (typeof EditTaskScalarFieldEnum)[keyof typeof EditTaskScalarFieldEnum]
+  export type RenderJobScalarFieldEnum = (typeof RenderJobScalarFieldEnum)[keyof typeof RenderJobScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -3391,6 +4766,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'InstructionType'
+   */
+  export type EnumInstructionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstructionType'>
+    
+
+
+  /**
+   * Reference to a field of type 'InstructionType[]'
+   */
+  export type ListEnumInstructionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstructionType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -3401,6 +4790,27 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'JobStatus'
+   */
+  export type EnumJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'JobStatus[]'
+   */
+  export type ListEnumJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
   /**
    * Deep Input Types
@@ -3419,7 +4829,11 @@ export namespace Prisma {
     status?: EnumStatusFilter<"Video"> | $Enums.Status
     createdAt?: DateTimeFilter<"Video"> | Date | string
     updatedAt?: DateTimeFilter<"Video"> | Date | string
-    edits?: EditTaskListRelationFilter
+    orignalId?: StringNullableFilter<"Video"> | string | null
+    instructions?: InstructionListRelationFilter
+    renderJobs?: RenderJobListRelationFilter
+    orignal?: XOR<VideoNullableScalarRelationFilter, VideoWhereInput> | null
+    copies?: VideoListRelationFilter
   }
 
   export type VideoOrderByWithRelationInput = {
@@ -3431,7 +4845,11 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    edits?: EditTaskOrderByRelationAggregateInput
+    orignalId?: SortOrderInput | SortOrder
+    instructions?: InstructionOrderByRelationAggregateInput
+    renderJobs?: RenderJobOrderByRelationAggregateInput
+    orignal?: VideoOrderByWithRelationInput
+    copies?: VideoOrderByRelationAggregateInput
   }
 
   export type VideoWhereUniqueInput = Prisma.AtLeast<{
@@ -3446,7 +4864,11 @@ export namespace Prisma {
     status?: EnumStatusFilter<"Video"> | $Enums.Status
     createdAt?: DateTimeFilter<"Video"> | Date | string
     updatedAt?: DateTimeFilter<"Video"> | Date | string
-    edits?: EditTaskListRelationFilter
+    orignalId?: StringNullableFilter<"Video"> | string | null
+    instructions?: InstructionListRelationFilter
+    renderJobs?: RenderJobListRelationFilter
+    orignal?: XOR<VideoNullableScalarRelationFilter, VideoWhereInput> | null
+    copies?: VideoListRelationFilter
   }, "id">
 
   export type VideoOrderByWithAggregationInput = {
@@ -3458,6 +4880,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    orignalId?: SortOrderInput | SortOrder
     _count?: VideoCountOrderByAggregateInput
     _avg?: VideoAvgOrderByAggregateInput
     _max?: VideoMaxOrderByAggregateInput
@@ -3477,71 +4900,139 @@ export namespace Prisma {
     status?: EnumStatusWithAggregatesFilter<"Video"> | $Enums.Status
     createdAt?: DateTimeWithAggregatesFilter<"Video"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Video"> | Date | string
+    orignalId?: StringNullableWithAggregatesFilter<"Video"> | string | null
   }
 
-  export type EditTaskWhereInput = {
-    AND?: EditTaskWhereInput | EditTaskWhereInput[]
-    OR?: EditTaskWhereInput[]
-    NOT?: EditTaskWhereInput | EditTaskWhereInput[]
-    id?: StringFilter<"EditTask"> | string
-    videoId?: StringFilter<"EditTask"> | string
-    type?: StringFilter<"EditTask"> | string
-    params?: JsonFilter<"EditTask">
-    status?: EnumStatusFilter<"EditTask"> | $Enums.Status
-    createdAt?: DateTimeFilter<"EditTask"> | Date | string
-    updatedAt?: DateTimeFilter<"EditTask"> | Date | string
+  export type InstructionWhereInput = {
+    AND?: InstructionWhereInput | InstructionWhereInput[]
+    OR?: InstructionWhereInput[]
+    NOT?: InstructionWhereInput | InstructionWhereInput[]
+    id?: StringFilter<"Instruction"> | string
+    videoId?: StringFilter<"Instruction"> | string
+    type?: EnumInstructionTypeFilter<"Instruction"> | $Enums.InstructionType
+    params?: JsonFilter<"Instruction">
+    sequence?: IntFilter<"Instruction"> | number
+    createdAt?: DateTimeFilter<"Instruction"> | Date | string
     video?: XOR<VideoScalarRelationFilter, VideoWhereInput>
   }
 
-  export type EditTaskOrderByWithRelationInput = {
+  export type InstructionOrderByWithRelationInput = {
     id?: SortOrder
     videoId?: SortOrder
     type?: SortOrder
     params?: SortOrder
+    sequence?: SortOrder
+    createdAt?: SortOrder
+    video?: VideoOrderByWithRelationInput
+  }
+
+  export type InstructionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InstructionWhereInput | InstructionWhereInput[]
+    OR?: InstructionWhereInput[]
+    NOT?: InstructionWhereInput | InstructionWhereInput[]
+    videoId?: StringFilter<"Instruction"> | string
+    type?: EnumInstructionTypeFilter<"Instruction"> | $Enums.InstructionType
+    params?: JsonFilter<"Instruction">
+    sequence?: IntFilter<"Instruction"> | number
+    createdAt?: DateTimeFilter<"Instruction"> | Date | string
+    video?: XOR<VideoScalarRelationFilter, VideoWhereInput>
+  }, "id">
+
+  export type InstructionOrderByWithAggregationInput = {
+    id?: SortOrder
+    videoId?: SortOrder
+    type?: SortOrder
+    params?: SortOrder
+    sequence?: SortOrder
+    createdAt?: SortOrder
+    _count?: InstructionCountOrderByAggregateInput
+    _avg?: InstructionAvgOrderByAggregateInput
+    _max?: InstructionMaxOrderByAggregateInput
+    _min?: InstructionMinOrderByAggregateInput
+    _sum?: InstructionSumOrderByAggregateInput
+  }
+
+  export type InstructionScalarWhereWithAggregatesInput = {
+    AND?: InstructionScalarWhereWithAggregatesInput | InstructionScalarWhereWithAggregatesInput[]
+    OR?: InstructionScalarWhereWithAggregatesInput[]
+    NOT?: InstructionScalarWhereWithAggregatesInput | InstructionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Instruction"> | string
+    videoId?: StringWithAggregatesFilter<"Instruction"> | string
+    type?: EnumInstructionTypeWithAggregatesFilter<"Instruction"> | $Enums.InstructionType
+    params?: JsonWithAggregatesFilter<"Instruction">
+    sequence?: IntWithAggregatesFilter<"Instruction"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Instruction"> | Date | string
+  }
+
+  export type RenderJobWhereInput = {
+    AND?: RenderJobWhereInput | RenderJobWhereInput[]
+    OR?: RenderJobWhereInput[]
+    NOT?: RenderJobWhereInput | RenderJobWhereInput[]
+    id?: StringFilter<"RenderJob"> | string
+    videoId?: StringFilter<"RenderJob"> | string
+    status?: EnumJobStatusFilter<"RenderJob"> | $Enums.JobStatus
+    outputUrl?: StringNullableFilter<"RenderJob"> | string | null
+    errorMessage?: StringNullableFilter<"RenderJob"> | string | null
+    isActive?: BoolFilter<"RenderJob"> | boolean
+    createdAt?: DateTimeFilter<"RenderJob"> | Date | string
+    updatedAt?: DateTimeFilter<"RenderJob"> | Date | string
+    video?: XOR<VideoScalarRelationFilter, VideoWhereInput>
+  }
+
+  export type RenderJobOrderByWithRelationInput = {
+    id?: SortOrder
+    videoId?: SortOrder
     status?: SortOrder
+    outputUrl?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     video?: VideoOrderByWithRelationInput
   }
 
-  export type EditTaskWhereUniqueInput = Prisma.AtLeast<{
+  export type RenderJobWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    AND?: EditTaskWhereInput | EditTaskWhereInput[]
-    OR?: EditTaskWhereInput[]
-    NOT?: EditTaskWhereInput | EditTaskWhereInput[]
-    videoId?: StringFilter<"EditTask"> | string
-    type?: StringFilter<"EditTask"> | string
-    params?: JsonFilter<"EditTask">
-    status?: EnumStatusFilter<"EditTask"> | $Enums.Status
-    createdAt?: DateTimeFilter<"EditTask"> | Date | string
-    updatedAt?: DateTimeFilter<"EditTask"> | Date | string
+    AND?: RenderJobWhereInput | RenderJobWhereInput[]
+    OR?: RenderJobWhereInput[]
+    NOT?: RenderJobWhereInput | RenderJobWhereInput[]
+    videoId?: StringFilter<"RenderJob"> | string
+    status?: EnumJobStatusFilter<"RenderJob"> | $Enums.JobStatus
+    outputUrl?: StringNullableFilter<"RenderJob"> | string | null
+    errorMessage?: StringNullableFilter<"RenderJob"> | string | null
+    isActive?: BoolFilter<"RenderJob"> | boolean
+    createdAt?: DateTimeFilter<"RenderJob"> | Date | string
+    updatedAt?: DateTimeFilter<"RenderJob"> | Date | string
     video?: XOR<VideoScalarRelationFilter, VideoWhereInput>
   }, "id">
 
-  export type EditTaskOrderByWithAggregationInput = {
+  export type RenderJobOrderByWithAggregationInput = {
     id?: SortOrder
     videoId?: SortOrder
-    type?: SortOrder
-    params?: SortOrder
     status?: SortOrder
+    outputUrl?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    _count?: EditTaskCountOrderByAggregateInput
-    _max?: EditTaskMaxOrderByAggregateInput
-    _min?: EditTaskMinOrderByAggregateInput
+    _count?: RenderJobCountOrderByAggregateInput
+    _max?: RenderJobMaxOrderByAggregateInput
+    _min?: RenderJobMinOrderByAggregateInput
   }
 
-  export type EditTaskScalarWhereWithAggregatesInput = {
-    AND?: EditTaskScalarWhereWithAggregatesInput | EditTaskScalarWhereWithAggregatesInput[]
-    OR?: EditTaskScalarWhereWithAggregatesInput[]
-    NOT?: EditTaskScalarWhereWithAggregatesInput | EditTaskScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"EditTask"> | string
-    videoId?: StringWithAggregatesFilter<"EditTask"> | string
-    type?: StringWithAggregatesFilter<"EditTask"> | string
-    params?: JsonWithAggregatesFilter<"EditTask">
-    status?: EnumStatusWithAggregatesFilter<"EditTask"> | $Enums.Status
-    createdAt?: DateTimeWithAggregatesFilter<"EditTask"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"EditTask"> | Date | string
+  export type RenderJobScalarWhereWithAggregatesInput = {
+    AND?: RenderJobScalarWhereWithAggregatesInput | RenderJobScalarWhereWithAggregatesInput[]
+    OR?: RenderJobScalarWhereWithAggregatesInput[]
+    NOT?: RenderJobScalarWhereWithAggregatesInput | RenderJobScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RenderJob"> | string
+    videoId?: StringWithAggregatesFilter<"RenderJob"> | string
+    status?: EnumJobStatusWithAggregatesFilter<"RenderJob"> | $Enums.JobStatus
+    outputUrl?: StringNullableWithAggregatesFilter<"RenderJob"> | string | null
+    errorMessage?: StringNullableWithAggregatesFilter<"RenderJob"> | string | null
+    isActive?: BoolWithAggregatesFilter<"RenderJob"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"RenderJob"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"RenderJob"> | Date | string
   }
 
   export type VideoCreateInput = {
@@ -3553,7 +5044,10 @@ export namespace Prisma {
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
-    edits?: EditTaskCreateNestedManyWithoutVideoInput
+    instructions?: InstructionCreateNestedManyWithoutVideoInput
+    renderJobs?: RenderJobCreateNestedManyWithoutVideoInput
+    orignal?: VideoCreateNestedOneWithoutCopiesInput
+    copies?: VideoCreateNestedManyWithoutOrignalInput
   }
 
   export type VideoUncheckedCreateInput = {
@@ -3565,7 +5059,10 @@ export namespace Prisma {
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
-    edits?: EditTaskUncheckedCreateNestedManyWithoutVideoInput
+    orignalId?: string | null
+    instructions?: InstructionUncheckedCreateNestedManyWithoutVideoInput
+    renderJobs?: RenderJobUncheckedCreateNestedManyWithoutVideoInput
+    copies?: VideoUncheckedCreateNestedManyWithoutOrignalInput
   }
 
   export type VideoUpdateInput = {
@@ -3577,7 +5074,10 @@ export namespace Prisma {
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    edits?: EditTaskUpdateManyWithoutVideoNestedInput
+    instructions?: InstructionUpdateManyWithoutVideoNestedInput
+    renderJobs?: RenderJobUpdateManyWithoutVideoNestedInput
+    orignal?: VideoUpdateOneWithoutCopiesNestedInput
+    copies?: VideoUpdateManyWithoutOrignalNestedInput
   }
 
   export type VideoUncheckedUpdateInput = {
@@ -3589,7 +5089,10 @@ export namespace Prisma {
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    edits?: EditTaskUncheckedUpdateManyWithoutVideoNestedInput
+    orignalId?: NullableStringFieldUpdateOperationsInput | string | null
+    instructions?: InstructionUncheckedUpdateManyWithoutVideoNestedInput
+    renderJobs?: RenderJobUncheckedUpdateManyWithoutVideoNestedInput
+    copies?: VideoUncheckedUpdateManyWithoutOrignalNestedInput
   }
 
   export type VideoCreateManyInput = {
@@ -3601,6 +5104,7 @@ export namespace Prisma {
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
+    orignalId?: string | null
   }
 
   export type VideoUpdateManyMutationInput = {
@@ -3623,73 +5127,143 @@ export namespace Prisma {
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orignalId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type EditTaskCreateInput = {
+  export type InstructionCreateInput = {
     id?: string
-    type: string
+    type: $Enums.InstructionType
     params: JsonNullValueInput | InputJsonValue
-    status?: $Enums.Status
+    sequence: number
     createdAt?: Date | string
-    updatedAt?: Date | string
-    video: VideoCreateNestedOneWithoutEditsInput
+    video: VideoCreateNestedOneWithoutInstructionsInput
   }
 
-  export type EditTaskUncheckedCreateInput = {
-    id?: string
-    videoId: string
-    type: string
-    params: JsonNullValueInput | InputJsonValue
-    status?: $Enums.Status
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type EditTaskUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    params?: JsonNullValueInput | InputJsonValue
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    video?: VideoUpdateOneRequiredWithoutEditsNestedInput
-  }
-
-  export type EditTaskUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    videoId?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    params?: JsonNullValueInput | InputJsonValue
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type EditTaskCreateManyInput = {
+  export type InstructionUncheckedCreateInput = {
     id?: string
     videoId: string
-    type: string
+    type: $Enums.InstructionType
     params: JsonNullValueInput | InputJsonValue
-    status?: $Enums.Status
+    sequence: number
+    createdAt?: Date | string
+  }
+
+  export type InstructionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumInstructionTypeFieldUpdateOperationsInput | $Enums.InstructionType
+    params?: JsonNullValueInput | InputJsonValue
+    sequence?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    video?: VideoUpdateOneRequiredWithoutInstructionsNestedInput
+  }
+
+  export type InstructionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    type?: EnumInstructionTypeFieldUpdateOperationsInput | $Enums.InstructionType
+    params?: JsonNullValueInput | InputJsonValue
+    sequence?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstructionCreateManyInput = {
+    id?: string
+    videoId: string
+    type: $Enums.InstructionType
+    params: JsonNullValueInput | InputJsonValue
+    sequence: number
+    createdAt?: Date | string
+  }
+
+  export type InstructionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumInstructionTypeFieldUpdateOperationsInput | $Enums.InstructionType
+    params?: JsonNullValueInput | InputJsonValue
+    sequence?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstructionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    type?: EnumInstructionTypeFieldUpdateOperationsInput | $Enums.InstructionType
+    params?: JsonNullValueInput | InputJsonValue
+    sequence?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RenderJobCreateInput = {
+    id?: string
+    status: $Enums.JobStatus
+    outputUrl?: string | null
+    errorMessage?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    video: VideoCreateNestedOneWithoutRenderJobsInput
+  }
+
+  export type RenderJobUncheckedCreateInput = {
+    id?: string
+    videoId: string
+    status: $Enums.JobStatus
+    outputUrl?: string | null
+    errorMessage?: string | null
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type EditTaskUpdateManyMutationInput = {
+  export type RenderJobUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    params?: JsonNullValueInput | InputJsonValue
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    outputUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    video?: VideoUpdateOneRequiredWithoutRenderJobsNestedInput
+  }
+
+  export type RenderJobUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    videoId?: StringFieldUpdateOperationsInput | string
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    outputUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type EditTaskUncheckedUpdateManyInput = {
+  export type RenderJobCreateManyInput = {
+    id?: string
+    videoId: string
+    status: $Enums.JobStatus
+    outputUrl?: string | null
+    errorMessage?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RenderJobUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    outputUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RenderJobUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     videoId?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    params?: JsonNullValueInput | InputJsonValue
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    outputUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -3749,10 +5323,42 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type EditTaskListRelationFilter = {
-    every?: EditTaskWhereInput
-    some?: EditTaskWhereInput
-    none?: EditTaskWhereInput
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type InstructionListRelationFilter = {
+    every?: InstructionWhereInput
+    some?: InstructionWhereInput
+    none?: InstructionWhereInput
+  }
+
+  export type RenderJobListRelationFilter = {
+    every?: RenderJobWhereInput
+    some?: RenderJobWhereInput
+    none?: RenderJobWhereInput
+  }
+
+  export type VideoNullableScalarRelationFilter = {
+    is?: VideoWhereInput | null
+    isNot?: VideoWhereInput | null
+  }
+
+  export type VideoListRelationFilter = {
+    every?: VideoWhereInput
+    some?: VideoWhereInput
+    none?: VideoWhereInput
   }
 
   export type SortOrderInput = {
@@ -3760,7 +5366,15 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type EditTaskOrderByRelationAggregateInput = {
+  export type InstructionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RenderJobOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VideoOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -3773,6 +5387,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    orignalId?: SortOrder
   }
 
   export type VideoAvgOrderByAggregateInput = {
@@ -3789,6 +5404,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    orignalId?: SortOrder
   }
 
   export type VideoMinOrderByAggregateInput = {
@@ -3800,6 +5416,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    orignalId?: SortOrder
   }
 
   export type VideoSumOrderByAggregateInput = {
@@ -3880,6 +5497,31 @@ export namespace Prisma {
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type EnumInstructionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.InstructionType | EnumInstructionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.InstructionType[] | ListEnumInstructionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InstructionType[] | ListEnumInstructionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumInstructionTypeFilter<$PrismaModel> | $Enums.InstructionType
+  }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -3909,32 +5551,47 @@ export namespace Prisma {
     isNot?: VideoWhereInput
   }
 
-  export type EditTaskCountOrderByAggregateInput = {
+  export type InstructionCountOrderByAggregateInput = {
     id?: SortOrder
     videoId?: SortOrder
     type?: SortOrder
     params?: SortOrder
-    status?: SortOrder
+    sequence?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
-  export type EditTaskMaxOrderByAggregateInput = {
+  export type InstructionAvgOrderByAggregateInput = {
+    sequence?: SortOrder
+  }
+
+  export type InstructionMaxOrderByAggregateInput = {
     id?: SortOrder
     videoId?: SortOrder
     type?: SortOrder
-    status?: SortOrder
+    sequence?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
-  export type EditTaskMinOrderByAggregateInput = {
+  export type InstructionMinOrderByAggregateInput = {
     id?: SortOrder
     videoId?: SortOrder
     type?: SortOrder
-    status?: SortOrder
+    sequence?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
+  }
+
+  export type InstructionSumOrderByAggregateInput = {
+    sequence?: SortOrder
+  }
+
+  export type EnumInstructionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InstructionType | EnumInstructionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.InstructionType[] | ListEnumInstructionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InstructionType[] | ListEnumInstructionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumInstructionTypeWithAggregatesFilter<$PrismaModel> | $Enums.InstructionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInstructionTypeFilter<$PrismaModel>
+    _max?: NestedEnumInstructionTypeFilter<$PrismaModel>
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -3963,18 +5620,115 @@ export namespace Prisma {
     _max?: NestedJsonFilter<$PrismaModel>
   }
 
-  export type EditTaskCreateNestedManyWithoutVideoInput = {
-    create?: XOR<EditTaskCreateWithoutVideoInput, EditTaskUncheckedCreateWithoutVideoInput> | EditTaskCreateWithoutVideoInput[] | EditTaskUncheckedCreateWithoutVideoInput[]
-    connectOrCreate?: EditTaskCreateOrConnectWithoutVideoInput | EditTaskCreateOrConnectWithoutVideoInput[]
-    createMany?: EditTaskCreateManyVideoInputEnvelope
-    connect?: EditTaskWhereUniqueInput | EditTaskWhereUniqueInput[]
+  export type EnumJobStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumJobStatusFilter<$PrismaModel> | $Enums.JobStatus
   }
 
-  export type EditTaskUncheckedCreateNestedManyWithoutVideoInput = {
-    create?: XOR<EditTaskCreateWithoutVideoInput, EditTaskUncheckedCreateWithoutVideoInput> | EditTaskCreateWithoutVideoInput[] | EditTaskUncheckedCreateWithoutVideoInput[]
-    connectOrCreate?: EditTaskCreateOrConnectWithoutVideoInput | EditTaskCreateOrConnectWithoutVideoInput[]
-    createMany?: EditTaskCreateManyVideoInputEnvelope
-    connect?: EditTaskWhereUniqueInput | EditTaskWhereUniqueInput[]
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type RenderJobCountOrderByAggregateInput = {
+    id?: SortOrder
+    videoId?: SortOrder
+    status?: SortOrder
+    outputUrl?: SortOrder
+    errorMessage?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RenderJobMaxOrderByAggregateInput = {
+    id?: SortOrder
+    videoId?: SortOrder
+    status?: SortOrder
+    outputUrl?: SortOrder
+    errorMessage?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RenderJobMinOrderByAggregateInput = {
+    id?: SortOrder
+    videoId?: SortOrder
+    status?: SortOrder
+    outputUrl?: SortOrder
+    errorMessage?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumJobStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.JobStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumJobStatusFilter<$PrismaModel>
+    _max?: NestedEnumJobStatusFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type InstructionCreateNestedManyWithoutVideoInput = {
+    create?: XOR<InstructionCreateWithoutVideoInput, InstructionUncheckedCreateWithoutVideoInput> | InstructionCreateWithoutVideoInput[] | InstructionUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: InstructionCreateOrConnectWithoutVideoInput | InstructionCreateOrConnectWithoutVideoInput[]
+    createMany?: InstructionCreateManyVideoInputEnvelope
+    connect?: InstructionWhereUniqueInput | InstructionWhereUniqueInput[]
+  }
+
+  export type RenderJobCreateNestedManyWithoutVideoInput = {
+    create?: XOR<RenderJobCreateWithoutVideoInput, RenderJobUncheckedCreateWithoutVideoInput> | RenderJobCreateWithoutVideoInput[] | RenderJobUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: RenderJobCreateOrConnectWithoutVideoInput | RenderJobCreateOrConnectWithoutVideoInput[]
+    createMany?: RenderJobCreateManyVideoInputEnvelope
+    connect?: RenderJobWhereUniqueInput | RenderJobWhereUniqueInput[]
+  }
+
+  export type VideoCreateNestedOneWithoutCopiesInput = {
+    create?: XOR<VideoCreateWithoutCopiesInput, VideoUncheckedCreateWithoutCopiesInput>
+    connectOrCreate?: VideoCreateOrConnectWithoutCopiesInput
+    connect?: VideoWhereUniqueInput
+  }
+
+  export type VideoCreateNestedManyWithoutOrignalInput = {
+    create?: XOR<VideoCreateWithoutOrignalInput, VideoUncheckedCreateWithoutOrignalInput> | VideoCreateWithoutOrignalInput[] | VideoUncheckedCreateWithoutOrignalInput[]
+    connectOrCreate?: VideoCreateOrConnectWithoutOrignalInput | VideoCreateOrConnectWithoutOrignalInput[]
+    createMany?: VideoCreateManyOrignalInputEnvelope
+    connect?: VideoWhereUniqueInput | VideoWhereUniqueInput[]
+  }
+
+  export type InstructionUncheckedCreateNestedManyWithoutVideoInput = {
+    create?: XOR<InstructionCreateWithoutVideoInput, InstructionUncheckedCreateWithoutVideoInput> | InstructionCreateWithoutVideoInput[] | InstructionUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: InstructionCreateOrConnectWithoutVideoInput | InstructionCreateOrConnectWithoutVideoInput[]
+    createMany?: InstructionCreateManyVideoInputEnvelope
+    connect?: InstructionWhereUniqueInput | InstructionWhereUniqueInput[]
+  }
+
+  export type RenderJobUncheckedCreateNestedManyWithoutVideoInput = {
+    create?: XOR<RenderJobCreateWithoutVideoInput, RenderJobUncheckedCreateWithoutVideoInput> | RenderJobCreateWithoutVideoInput[] | RenderJobUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: RenderJobCreateOrConnectWithoutVideoInput | RenderJobCreateOrConnectWithoutVideoInput[]
+    createMany?: RenderJobCreateManyVideoInputEnvelope
+    connect?: RenderJobWhereUniqueInput | RenderJobWhereUniqueInput[]
+  }
+
+  export type VideoUncheckedCreateNestedManyWithoutOrignalInput = {
+    create?: XOR<VideoCreateWithoutOrignalInput, VideoUncheckedCreateWithoutOrignalInput> | VideoCreateWithoutOrignalInput[] | VideoUncheckedCreateWithoutOrignalInput[]
+    connectOrCreate?: VideoCreateOrConnectWithoutOrignalInput | VideoCreateOrConnectWithoutOrignalInput[]
+    createMany?: VideoCreateManyOrignalInputEnvelope
+    connect?: VideoWhereUniqueInput | VideoWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -4005,46 +5759,142 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type EditTaskUpdateManyWithoutVideoNestedInput = {
-    create?: XOR<EditTaskCreateWithoutVideoInput, EditTaskUncheckedCreateWithoutVideoInput> | EditTaskCreateWithoutVideoInput[] | EditTaskUncheckedCreateWithoutVideoInput[]
-    connectOrCreate?: EditTaskCreateOrConnectWithoutVideoInput | EditTaskCreateOrConnectWithoutVideoInput[]
-    upsert?: EditTaskUpsertWithWhereUniqueWithoutVideoInput | EditTaskUpsertWithWhereUniqueWithoutVideoInput[]
-    createMany?: EditTaskCreateManyVideoInputEnvelope
-    set?: EditTaskWhereUniqueInput | EditTaskWhereUniqueInput[]
-    disconnect?: EditTaskWhereUniqueInput | EditTaskWhereUniqueInput[]
-    delete?: EditTaskWhereUniqueInput | EditTaskWhereUniqueInput[]
-    connect?: EditTaskWhereUniqueInput | EditTaskWhereUniqueInput[]
-    update?: EditTaskUpdateWithWhereUniqueWithoutVideoInput | EditTaskUpdateWithWhereUniqueWithoutVideoInput[]
-    updateMany?: EditTaskUpdateManyWithWhereWithoutVideoInput | EditTaskUpdateManyWithWhereWithoutVideoInput[]
-    deleteMany?: EditTaskScalarWhereInput | EditTaskScalarWhereInput[]
+  export type InstructionUpdateManyWithoutVideoNestedInput = {
+    create?: XOR<InstructionCreateWithoutVideoInput, InstructionUncheckedCreateWithoutVideoInput> | InstructionCreateWithoutVideoInput[] | InstructionUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: InstructionCreateOrConnectWithoutVideoInput | InstructionCreateOrConnectWithoutVideoInput[]
+    upsert?: InstructionUpsertWithWhereUniqueWithoutVideoInput | InstructionUpsertWithWhereUniqueWithoutVideoInput[]
+    createMany?: InstructionCreateManyVideoInputEnvelope
+    set?: InstructionWhereUniqueInput | InstructionWhereUniqueInput[]
+    disconnect?: InstructionWhereUniqueInput | InstructionWhereUniqueInput[]
+    delete?: InstructionWhereUniqueInput | InstructionWhereUniqueInput[]
+    connect?: InstructionWhereUniqueInput | InstructionWhereUniqueInput[]
+    update?: InstructionUpdateWithWhereUniqueWithoutVideoInput | InstructionUpdateWithWhereUniqueWithoutVideoInput[]
+    updateMany?: InstructionUpdateManyWithWhereWithoutVideoInput | InstructionUpdateManyWithWhereWithoutVideoInput[]
+    deleteMany?: InstructionScalarWhereInput | InstructionScalarWhereInput[]
   }
 
-  export type EditTaskUncheckedUpdateManyWithoutVideoNestedInput = {
-    create?: XOR<EditTaskCreateWithoutVideoInput, EditTaskUncheckedCreateWithoutVideoInput> | EditTaskCreateWithoutVideoInput[] | EditTaskUncheckedCreateWithoutVideoInput[]
-    connectOrCreate?: EditTaskCreateOrConnectWithoutVideoInput | EditTaskCreateOrConnectWithoutVideoInput[]
-    upsert?: EditTaskUpsertWithWhereUniqueWithoutVideoInput | EditTaskUpsertWithWhereUniqueWithoutVideoInput[]
-    createMany?: EditTaskCreateManyVideoInputEnvelope
-    set?: EditTaskWhereUniqueInput | EditTaskWhereUniqueInput[]
-    disconnect?: EditTaskWhereUniqueInput | EditTaskWhereUniqueInput[]
-    delete?: EditTaskWhereUniqueInput | EditTaskWhereUniqueInput[]
-    connect?: EditTaskWhereUniqueInput | EditTaskWhereUniqueInput[]
-    update?: EditTaskUpdateWithWhereUniqueWithoutVideoInput | EditTaskUpdateWithWhereUniqueWithoutVideoInput[]
-    updateMany?: EditTaskUpdateManyWithWhereWithoutVideoInput | EditTaskUpdateManyWithWhereWithoutVideoInput[]
-    deleteMany?: EditTaskScalarWhereInput | EditTaskScalarWhereInput[]
+  export type RenderJobUpdateManyWithoutVideoNestedInput = {
+    create?: XOR<RenderJobCreateWithoutVideoInput, RenderJobUncheckedCreateWithoutVideoInput> | RenderJobCreateWithoutVideoInput[] | RenderJobUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: RenderJobCreateOrConnectWithoutVideoInput | RenderJobCreateOrConnectWithoutVideoInput[]
+    upsert?: RenderJobUpsertWithWhereUniqueWithoutVideoInput | RenderJobUpsertWithWhereUniqueWithoutVideoInput[]
+    createMany?: RenderJobCreateManyVideoInputEnvelope
+    set?: RenderJobWhereUniqueInput | RenderJobWhereUniqueInput[]
+    disconnect?: RenderJobWhereUniqueInput | RenderJobWhereUniqueInput[]
+    delete?: RenderJobWhereUniqueInput | RenderJobWhereUniqueInput[]
+    connect?: RenderJobWhereUniqueInput | RenderJobWhereUniqueInput[]
+    update?: RenderJobUpdateWithWhereUniqueWithoutVideoInput | RenderJobUpdateWithWhereUniqueWithoutVideoInput[]
+    updateMany?: RenderJobUpdateManyWithWhereWithoutVideoInput | RenderJobUpdateManyWithWhereWithoutVideoInput[]
+    deleteMany?: RenderJobScalarWhereInput | RenderJobScalarWhereInput[]
   }
 
-  export type VideoCreateNestedOneWithoutEditsInput = {
-    create?: XOR<VideoCreateWithoutEditsInput, VideoUncheckedCreateWithoutEditsInput>
-    connectOrCreate?: VideoCreateOrConnectWithoutEditsInput
+  export type VideoUpdateOneWithoutCopiesNestedInput = {
+    create?: XOR<VideoCreateWithoutCopiesInput, VideoUncheckedCreateWithoutCopiesInput>
+    connectOrCreate?: VideoCreateOrConnectWithoutCopiesInput
+    upsert?: VideoUpsertWithoutCopiesInput
+    disconnect?: VideoWhereInput | boolean
+    delete?: VideoWhereInput | boolean
+    connect?: VideoWhereUniqueInput
+    update?: XOR<XOR<VideoUpdateToOneWithWhereWithoutCopiesInput, VideoUpdateWithoutCopiesInput>, VideoUncheckedUpdateWithoutCopiesInput>
+  }
+
+  export type VideoUpdateManyWithoutOrignalNestedInput = {
+    create?: XOR<VideoCreateWithoutOrignalInput, VideoUncheckedCreateWithoutOrignalInput> | VideoCreateWithoutOrignalInput[] | VideoUncheckedCreateWithoutOrignalInput[]
+    connectOrCreate?: VideoCreateOrConnectWithoutOrignalInput | VideoCreateOrConnectWithoutOrignalInput[]
+    upsert?: VideoUpsertWithWhereUniqueWithoutOrignalInput | VideoUpsertWithWhereUniqueWithoutOrignalInput[]
+    createMany?: VideoCreateManyOrignalInputEnvelope
+    set?: VideoWhereUniqueInput | VideoWhereUniqueInput[]
+    disconnect?: VideoWhereUniqueInput | VideoWhereUniqueInput[]
+    delete?: VideoWhereUniqueInput | VideoWhereUniqueInput[]
+    connect?: VideoWhereUniqueInput | VideoWhereUniqueInput[]
+    update?: VideoUpdateWithWhereUniqueWithoutOrignalInput | VideoUpdateWithWhereUniqueWithoutOrignalInput[]
+    updateMany?: VideoUpdateManyWithWhereWithoutOrignalInput | VideoUpdateManyWithWhereWithoutOrignalInput[]
+    deleteMany?: VideoScalarWhereInput | VideoScalarWhereInput[]
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type InstructionUncheckedUpdateManyWithoutVideoNestedInput = {
+    create?: XOR<InstructionCreateWithoutVideoInput, InstructionUncheckedCreateWithoutVideoInput> | InstructionCreateWithoutVideoInput[] | InstructionUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: InstructionCreateOrConnectWithoutVideoInput | InstructionCreateOrConnectWithoutVideoInput[]
+    upsert?: InstructionUpsertWithWhereUniqueWithoutVideoInput | InstructionUpsertWithWhereUniqueWithoutVideoInput[]
+    createMany?: InstructionCreateManyVideoInputEnvelope
+    set?: InstructionWhereUniqueInput | InstructionWhereUniqueInput[]
+    disconnect?: InstructionWhereUniqueInput | InstructionWhereUniqueInput[]
+    delete?: InstructionWhereUniqueInput | InstructionWhereUniqueInput[]
+    connect?: InstructionWhereUniqueInput | InstructionWhereUniqueInput[]
+    update?: InstructionUpdateWithWhereUniqueWithoutVideoInput | InstructionUpdateWithWhereUniqueWithoutVideoInput[]
+    updateMany?: InstructionUpdateManyWithWhereWithoutVideoInput | InstructionUpdateManyWithWhereWithoutVideoInput[]
+    deleteMany?: InstructionScalarWhereInput | InstructionScalarWhereInput[]
+  }
+
+  export type RenderJobUncheckedUpdateManyWithoutVideoNestedInput = {
+    create?: XOR<RenderJobCreateWithoutVideoInput, RenderJobUncheckedCreateWithoutVideoInput> | RenderJobCreateWithoutVideoInput[] | RenderJobUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: RenderJobCreateOrConnectWithoutVideoInput | RenderJobCreateOrConnectWithoutVideoInput[]
+    upsert?: RenderJobUpsertWithWhereUniqueWithoutVideoInput | RenderJobUpsertWithWhereUniqueWithoutVideoInput[]
+    createMany?: RenderJobCreateManyVideoInputEnvelope
+    set?: RenderJobWhereUniqueInput | RenderJobWhereUniqueInput[]
+    disconnect?: RenderJobWhereUniqueInput | RenderJobWhereUniqueInput[]
+    delete?: RenderJobWhereUniqueInput | RenderJobWhereUniqueInput[]
+    connect?: RenderJobWhereUniqueInput | RenderJobWhereUniqueInput[]
+    update?: RenderJobUpdateWithWhereUniqueWithoutVideoInput | RenderJobUpdateWithWhereUniqueWithoutVideoInput[]
+    updateMany?: RenderJobUpdateManyWithWhereWithoutVideoInput | RenderJobUpdateManyWithWhereWithoutVideoInput[]
+    deleteMany?: RenderJobScalarWhereInput | RenderJobScalarWhereInput[]
+  }
+
+  export type VideoUncheckedUpdateManyWithoutOrignalNestedInput = {
+    create?: XOR<VideoCreateWithoutOrignalInput, VideoUncheckedCreateWithoutOrignalInput> | VideoCreateWithoutOrignalInput[] | VideoUncheckedCreateWithoutOrignalInput[]
+    connectOrCreate?: VideoCreateOrConnectWithoutOrignalInput | VideoCreateOrConnectWithoutOrignalInput[]
+    upsert?: VideoUpsertWithWhereUniqueWithoutOrignalInput | VideoUpsertWithWhereUniqueWithoutOrignalInput[]
+    createMany?: VideoCreateManyOrignalInputEnvelope
+    set?: VideoWhereUniqueInput | VideoWhereUniqueInput[]
+    disconnect?: VideoWhereUniqueInput | VideoWhereUniqueInput[]
+    delete?: VideoWhereUniqueInput | VideoWhereUniqueInput[]
+    connect?: VideoWhereUniqueInput | VideoWhereUniqueInput[]
+    update?: VideoUpdateWithWhereUniqueWithoutOrignalInput | VideoUpdateWithWhereUniqueWithoutOrignalInput[]
+    updateMany?: VideoUpdateManyWithWhereWithoutOrignalInput | VideoUpdateManyWithWhereWithoutOrignalInput[]
+    deleteMany?: VideoScalarWhereInput | VideoScalarWhereInput[]
+  }
+
+  export type VideoCreateNestedOneWithoutInstructionsInput = {
+    create?: XOR<VideoCreateWithoutInstructionsInput, VideoUncheckedCreateWithoutInstructionsInput>
+    connectOrCreate?: VideoCreateOrConnectWithoutInstructionsInput
     connect?: VideoWhereUniqueInput
   }
 
-  export type VideoUpdateOneRequiredWithoutEditsNestedInput = {
-    create?: XOR<VideoCreateWithoutEditsInput, VideoUncheckedCreateWithoutEditsInput>
-    connectOrCreate?: VideoCreateOrConnectWithoutEditsInput
-    upsert?: VideoUpsertWithoutEditsInput
+  export type EnumInstructionTypeFieldUpdateOperationsInput = {
+    set?: $Enums.InstructionType
+  }
+
+  export type VideoUpdateOneRequiredWithoutInstructionsNestedInput = {
+    create?: XOR<VideoCreateWithoutInstructionsInput, VideoUncheckedCreateWithoutInstructionsInput>
+    connectOrCreate?: VideoCreateOrConnectWithoutInstructionsInput
+    upsert?: VideoUpsertWithoutInstructionsInput
     connect?: VideoWhereUniqueInput
-    update?: XOR<XOR<VideoUpdateToOneWithWhereWithoutEditsInput, VideoUpdateWithoutEditsInput>, VideoUncheckedUpdateWithoutEditsInput>
+    update?: XOR<XOR<VideoUpdateToOneWithWhereWithoutInstructionsInput, VideoUpdateWithoutInstructionsInput>, VideoUncheckedUpdateWithoutInstructionsInput>
+  }
+
+  export type VideoCreateNestedOneWithoutRenderJobsInput = {
+    create?: XOR<VideoCreateWithoutRenderJobsInput, VideoUncheckedCreateWithoutRenderJobsInput>
+    connectOrCreate?: VideoCreateOrConnectWithoutRenderJobsInput
+    connect?: VideoWhereUniqueInput
+  }
+
+  export type EnumJobStatusFieldUpdateOperationsInput = {
+    set?: $Enums.JobStatus
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type VideoUpdateOneRequiredWithoutRenderJobsNestedInput = {
+    create?: XOR<VideoCreateWithoutRenderJobsInput, VideoUncheckedCreateWithoutRenderJobsInput>
+    connectOrCreate?: VideoCreateOrConnectWithoutRenderJobsInput
+    upsert?: VideoUpsertWithoutRenderJobsInput
+    connect?: VideoWhereUniqueInput
+    update?: XOR<XOR<VideoUpdateToOneWithWhereWithoutRenderJobsInput, VideoUpdateWithoutRenderJobsInput>, VideoUncheckedUpdateWithoutRenderJobsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -4099,6 +5949,20 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -4195,6 +6059,40 @@ export namespace Prisma {
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumInstructionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.InstructionType | EnumInstructionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.InstructionType[] | ListEnumInstructionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InstructionType[] | ListEnumInstructionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumInstructionTypeFilter<$PrismaModel> | $Enums.InstructionType
+  }
+
+  export type NestedEnumInstructionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InstructionType | EnumInstructionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.InstructionType[] | ListEnumInstructionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InstructionType[] | ListEnumInstructionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumInstructionTypeWithAggregatesFilter<$PrismaModel> | $Enums.InstructionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInstructionTypeFilter<$PrismaModel>
+    _max?: NestedEnumInstructionTypeFilter<$PrismaModel>
+  }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -4219,64 +6117,93 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type EditTaskCreateWithoutVideoInput = {
+  export type NestedEnumJobStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumJobStatusFilter<$PrismaModel> | $Enums.JobStatus
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedEnumJobStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.JobStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumJobStatusFilter<$PrismaModel>
+    _max?: NestedEnumJobStatusFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type InstructionCreateWithoutVideoInput = {
     id?: string
-    type: string
+    type: $Enums.InstructionType
     params: JsonNullValueInput | InputJsonValue
-    status?: $Enums.Status
+    sequence: number
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
-  export type EditTaskUncheckedCreateWithoutVideoInput = {
+  export type InstructionUncheckedCreateWithoutVideoInput = {
     id?: string
-    type: string
+    type: $Enums.InstructionType
     params: JsonNullValueInput | InputJsonValue
-    status?: $Enums.Status
+    sequence: number
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
-  export type EditTaskCreateOrConnectWithoutVideoInput = {
-    where: EditTaskWhereUniqueInput
-    create: XOR<EditTaskCreateWithoutVideoInput, EditTaskUncheckedCreateWithoutVideoInput>
+  export type InstructionCreateOrConnectWithoutVideoInput = {
+    where: InstructionWhereUniqueInput
+    create: XOR<InstructionCreateWithoutVideoInput, InstructionUncheckedCreateWithoutVideoInput>
   }
 
-  export type EditTaskCreateManyVideoInputEnvelope = {
-    data: EditTaskCreateManyVideoInput | EditTaskCreateManyVideoInput[]
+  export type InstructionCreateManyVideoInputEnvelope = {
+    data: InstructionCreateManyVideoInput | InstructionCreateManyVideoInput[]
     skipDuplicates?: boolean
   }
 
-  export type EditTaskUpsertWithWhereUniqueWithoutVideoInput = {
-    where: EditTaskWhereUniqueInput
-    update: XOR<EditTaskUpdateWithoutVideoInput, EditTaskUncheckedUpdateWithoutVideoInput>
-    create: XOR<EditTaskCreateWithoutVideoInput, EditTaskUncheckedCreateWithoutVideoInput>
+  export type RenderJobCreateWithoutVideoInput = {
+    id?: string
+    status: $Enums.JobStatus
+    outputUrl?: string | null
+    errorMessage?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type EditTaskUpdateWithWhereUniqueWithoutVideoInput = {
-    where: EditTaskWhereUniqueInput
-    data: XOR<EditTaskUpdateWithoutVideoInput, EditTaskUncheckedUpdateWithoutVideoInput>
+  export type RenderJobUncheckedCreateWithoutVideoInput = {
+    id?: string
+    status: $Enums.JobStatus
+    outputUrl?: string | null
+    errorMessage?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type EditTaskUpdateManyWithWhereWithoutVideoInput = {
-    where: EditTaskScalarWhereInput
-    data: XOR<EditTaskUpdateManyMutationInput, EditTaskUncheckedUpdateManyWithoutVideoInput>
+  export type RenderJobCreateOrConnectWithoutVideoInput = {
+    where: RenderJobWhereUniqueInput
+    create: XOR<RenderJobCreateWithoutVideoInput, RenderJobUncheckedCreateWithoutVideoInput>
   }
 
-  export type EditTaskScalarWhereInput = {
-    AND?: EditTaskScalarWhereInput | EditTaskScalarWhereInput[]
-    OR?: EditTaskScalarWhereInput[]
-    NOT?: EditTaskScalarWhereInput | EditTaskScalarWhereInput[]
-    id?: StringFilter<"EditTask"> | string
-    videoId?: StringFilter<"EditTask"> | string
-    type?: StringFilter<"EditTask"> | string
-    params?: JsonFilter<"EditTask">
-    status?: EnumStatusFilter<"EditTask"> | $Enums.Status
-    createdAt?: DateTimeFilter<"EditTask"> | Date | string
-    updatedAt?: DateTimeFilter<"EditTask"> | Date | string
+  export type RenderJobCreateManyVideoInputEnvelope = {
+    data: RenderJobCreateManyVideoInput | RenderJobCreateManyVideoInput[]
+    skipDuplicates?: boolean
   }
 
-  export type VideoCreateWithoutEditsInput = {
+  export type VideoCreateWithoutCopiesInput = {
     id?: string
     filename: string
     path: string
@@ -4285,9 +6212,12 @@ export namespace Prisma {
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
+    instructions?: InstructionCreateNestedManyWithoutVideoInput
+    renderJobs?: RenderJobCreateNestedManyWithoutVideoInput
+    orignal?: VideoCreateNestedOneWithoutCopiesInput
   }
 
-  export type VideoUncheckedCreateWithoutEditsInput = {
+  export type VideoUncheckedCreateWithoutCopiesInput = {
     id?: string
     filename: string
     path: string
@@ -4296,77 +6226,443 @@ export namespace Prisma {
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
+    orignalId?: string | null
+    instructions?: InstructionUncheckedCreateNestedManyWithoutVideoInput
+    renderJobs?: RenderJobUncheckedCreateNestedManyWithoutVideoInput
   }
 
-  export type VideoCreateOrConnectWithoutEditsInput = {
+  export type VideoCreateOrConnectWithoutCopiesInput = {
     where: VideoWhereUniqueInput
-    create: XOR<VideoCreateWithoutEditsInput, VideoUncheckedCreateWithoutEditsInput>
+    create: XOR<VideoCreateWithoutCopiesInput, VideoUncheckedCreateWithoutCopiesInput>
   }
 
-  export type VideoUpsertWithoutEditsInput = {
-    update: XOR<VideoUpdateWithoutEditsInput, VideoUncheckedUpdateWithoutEditsInput>
-    create: XOR<VideoCreateWithoutEditsInput, VideoUncheckedCreateWithoutEditsInput>
-    where?: VideoWhereInput
-  }
-
-  export type VideoUpdateToOneWithWhereWithoutEditsInput = {
-    where?: VideoWhereInput
-    data: XOR<VideoUpdateWithoutEditsInput, VideoUncheckedUpdateWithoutEditsInput>
-  }
-
-  export type VideoUpdateWithoutEditsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    path?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    duration?: NullableFloatFieldUpdateOperationsInput | number | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type VideoUncheckedUpdateWithoutEditsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    path?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    duration?: NullableFloatFieldUpdateOperationsInput | number | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type EditTaskCreateManyVideoInput = {
+  export type VideoCreateWithoutOrignalInput = {
     id?: string
-    type: string
+    filename: string
+    path: string
+    size: number
+    duration?: number | null
+    status?: $Enums.Status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    instructions?: InstructionCreateNestedManyWithoutVideoInput
+    renderJobs?: RenderJobCreateNestedManyWithoutVideoInput
+    copies?: VideoCreateNestedManyWithoutOrignalInput
+  }
+
+  export type VideoUncheckedCreateWithoutOrignalInput = {
+    id?: string
+    filename: string
+    path: string
+    size: number
+    duration?: number | null
+    status?: $Enums.Status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    instructions?: InstructionUncheckedCreateNestedManyWithoutVideoInput
+    renderJobs?: RenderJobUncheckedCreateNestedManyWithoutVideoInput
+    copies?: VideoUncheckedCreateNestedManyWithoutOrignalInput
+  }
+
+  export type VideoCreateOrConnectWithoutOrignalInput = {
+    where: VideoWhereUniqueInput
+    create: XOR<VideoCreateWithoutOrignalInput, VideoUncheckedCreateWithoutOrignalInput>
+  }
+
+  export type VideoCreateManyOrignalInputEnvelope = {
+    data: VideoCreateManyOrignalInput | VideoCreateManyOrignalInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InstructionUpsertWithWhereUniqueWithoutVideoInput = {
+    where: InstructionWhereUniqueInput
+    update: XOR<InstructionUpdateWithoutVideoInput, InstructionUncheckedUpdateWithoutVideoInput>
+    create: XOR<InstructionCreateWithoutVideoInput, InstructionUncheckedCreateWithoutVideoInput>
+  }
+
+  export type InstructionUpdateWithWhereUniqueWithoutVideoInput = {
+    where: InstructionWhereUniqueInput
+    data: XOR<InstructionUpdateWithoutVideoInput, InstructionUncheckedUpdateWithoutVideoInput>
+  }
+
+  export type InstructionUpdateManyWithWhereWithoutVideoInput = {
+    where: InstructionScalarWhereInput
+    data: XOR<InstructionUpdateManyMutationInput, InstructionUncheckedUpdateManyWithoutVideoInput>
+  }
+
+  export type InstructionScalarWhereInput = {
+    AND?: InstructionScalarWhereInput | InstructionScalarWhereInput[]
+    OR?: InstructionScalarWhereInput[]
+    NOT?: InstructionScalarWhereInput | InstructionScalarWhereInput[]
+    id?: StringFilter<"Instruction"> | string
+    videoId?: StringFilter<"Instruction"> | string
+    type?: EnumInstructionTypeFilter<"Instruction"> | $Enums.InstructionType
+    params?: JsonFilter<"Instruction">
+    sequence?: IntFilter<"Instruction"> | number
+    createdAt?: DateTimeFilter<"Instruction"> | Date | string
+  }
+
+  export type RenderJobUpsertWithWhereUniqueWithoutVideoInput = {
+    where: RenderJobWhereUniqueInput
+    update: XOR<RenderJobUpdateWithoutVideoInput, RenderJobUncheckedUpdateWithoutVideoInput>
+    create: XOR<RenderJobCreateWithoutVideoInput, RenderJobUncheckedCreateWithoutVideoInput>
+  }
+
+  export type RenderJobUpdateWithWhereUniqueWithoutVideoInput = {
+    where: RenderJobWhereUniqueInput
+    data: XOR<RenderJobUpdateWithoutVideoInput, RenderJobUncheckedUpdateWithoutVideoInput>
+  }
+
+  export type RenderJobUpdateManyWithWhereWithoutVideoInput = {
+    where: RenderJobScalarWhereInput
+    data: XOR<RenderJobUpdateManyMutationInput, RenderJobUncheckedUpdateManyWithoutVideoInput>
+  }
+
+  export type RenderJobScalarWhereInput = {
+    AND?: RenderJobScalarWhereInput | RenderJobScalarWhereInput[]
+    OR?: RenderJobScalarWhereInput[]
+    NOT?: RenderJobScalarWhereInput | RenderJobScalarWhereInput[]
+    id?: StringFilter<"RenderJob"> | string
+    videoId?: StringFilter<"RenderJob"> | string
+    status?: EnumJobStatusFilter<"RenderJob"> | $Enums.JobStatus
+    outputUrl?: StringNullableFilter<"RenderJob"> | string | null
+    errorMessage?: StringNullableFilter<"RenderJob"> | string | null
+    isActive?: BoolFilter<"RenderJob"> | boolean
+    createdAt?: DateTimeFilter<"RenderJob"> | Date | string
+    updatedAt?: DateTimeFilter<"RenderJob"> | Date | string
+  }
+
+  export type VideoUpsertWithoutCopiesInput = {
+    update: XOR<VideoUpdateWithoutCopiesInput, VideoUncheckedUpdateWithoutCopiesInput>
+    create: XOR<VideoCreateWithoutCopiesInput, VideoUncheckedCreateWithoutCopiesInput>
+    where?: VideoWhereInput
+  }
+
+  export type VideoUpdateToOneWithWhereWithoutCopiesInput = {
+    where?: VideoWhereInput
+    data: XOR<VideoUpdateWithoutCopiesInput, VideoUncheckedUpdateWithoutCopiesInput>
+  }
+
+  export type VideoUpdateWithoutCopiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    path?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    instructions?: InstructionUpdateManyWithoutVideoNestedInput
+    renderJobs?: RenderJobUpdateManyWithoutVideoNestedInput
+    orignal?: VideoUpdateOneWithoutCopiesNestedInput
+  }
+
+  export type VideoUncheckedUpdateWithoutCopiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    path?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orignalId?: NullableStringFieldUpdateOperationsInput | string | null
+    instructions?: InstructionUncheckedUpdateManyWithoutVideoNestedInput
+    renderJobs?: RenderJobUncheckedUpdateManyWithoutVideoNestedInput
+  }
+
+  export type VideoUpsertWithWhereUniqueWithoutOrignalInput = {
+    where: VideoWhereUniqueInput
+    update: XOR<VideoUpdateWithoutOrignalInput, VideoUncheckedUpdateWithoutOrignalInput>
+    create: XOR<VideoCreateWithoutOrignalInput, VideoUncheckedCreateWithoutOrignalInput>
+  }
+
+  export type VideoUpdateWithWhereUniqueWithoutOrignalInput = {
+    where: VideoWhereUniqueInput
+    data: XOR<VideoUpdateWithoutOrignalInput, VideoUncheckedUpdateWithoutOrignalInput>
+  }
+
+  export type VideoUpdateManyWithWhereWithoutOrignalInput = {
+    where: VideoScalarWhereInput
+    data: XOR<VideoUpdateManyMutationInput, VideoUncheckedUpdateManyWithoutOrignalInput>
+  }
+
+  export type VideoScalarWhereInput = {
+    AND?: VideoScalarWhereInput | VideoScalarWhereInput[]
+    OR?: VideoScalarWhereInput[]
+    NOT?: VideoScalarWhereInput | VideoScalarWhereInput[]
+    id?: StringFilter<"Video"> | string
+    filename?: StringFilter<"Video"> | string
+    path?: StringFilter<"Video"> | string
+    size?: IntFilter<"Video"> | number
+    duration?: FloatNullableFilter<"Video"> | number | null
+    status?: EnumStatusFilter<"Video"> | $Enums.Status
+    createdAt?: DateTimeFilter<"Video"> | Date | string
+    updatedAt?: DateTimeFilter<"Video"> | Date | string
+    orignalId?: StringNullableFilter<"Video"> | string | null
+  }
+
+  export type VideoCreateWithoutInstructionsInput = {
+    id?: string
+    filename: string
+    path: string
+    size: number
+    duration?: number | null
+    status?: $Enums.Status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    renderJobs?: RenderJobCreateNestedManyWithoutVideoInput
+    orignal?: VideoCreateNestedOneWithoutCopiesInput
+    copies?: VideoCreateNestedManyWithoutOrignalInput
+  }
+
+  export type VideoUncheckedCreateWithoutInstructionsInput = {
+    id?: string
+    filename: string
+    path: string
+    size: number
+    duration?: number | null
+    status?: $Enums.Status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orignalId?: string | null
+    renderJobs?: RenderJobUncheckedCreateNestedManyWithoutVideoInput
+    copies?: VideoUncheckedCreateNestedManyWithoutOrignalInput
+  }
+
+  export type VideoCreateOrConnectWithoutInstructionsInput = {
+    where: VideoWhereUniqueInput
+    create: XOR<VideoCreateWithoutInstructionsInput, VideoUncheckedCreateWithoutInstructionsInput>
+  }
+
+  export type VideoUpsertWithoutInstructionsInput = {
+    update: XOR<VideoUpdateWithoutInstructionsInput, VideoUncheckedUpdateWithoutInstructionsInput>
+    create: XOR<VideoCreateWithoutInstructionsInput, VideoUncheckedCreateWithoutInstructionsInput>
+    where?: VideoWhereInput
+  }
+
+  export type VideoUpdateToOneWithWhereWithoutInstructionsInput = {
+    where?: VideoWhereInput
+    data: XOR<VideoUpdateWithoutInstructionsInput, VideoUncheckedUpdateWithoutInstructionsInput>
+  }
+
+  export type VideoUpdateWithoutInstructionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    path?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    renderJobs?: RenderJobUpdateManyWithoutVideoNestedInput
+    orignal?: VideoUpdateOneWithoutCopiesNestedInput
+    copies?: VideoUpdateManyWithoutOrignalNestedInput
+  }
+
+  export type VideoUncheckedUpdateWithoutInstructionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    path?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orignalId?: NullableStringFieldUpdateOperationsInput | string | null
+    renderJobs?: RenderJobUncheckedUpdateManyWithoutVideoNestedInput
+    copies?: VideoUncheckedUpdateManyWithoutOrignalNestedInput
+  }
+
+  export type VideoCreateWithoutRenderJobsInput = {
+    id?: string
+    filename: string
+    path: string
+    size: number
+    duration?: number | null
+    status?: $Enums.Status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    instructions?: InstructionCreateNestedManyWithoutVideoInput
+    orignal?: VideoCreateNestedOneWithoutCopiesInput
+    copies?: VideoCreateNestedManyWithoutOrignalInput
+  }
+
+  export type VideoUncheckedCreateWithoutRenderJobsInput = {
+    id?: string
+    filename: string
+    path: string
+    size: number
+    duration?: number | null
+    status?: $Enums.Status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orignalId?: string | null
+    instructions?: InstructionUncheckedCreateNestedManyWithoutVideoInput
+    copies?: VideoUncheckedCreateNestedManyWithoutOrignalInput
+  }
+
+  export type VideoCreateOrConnectWithoutRenderJobsInput = {
+    where: VideoWhereUniqueInput
+    create: XOR<VideoCreateWithoutRenderJobsInput, VideoUncheckedCreateWithoutRenderJobsInput>
+  }
+
+  export type VideoUpsertWithoutRenderJobsInput = {
+    update: XOR<VideoUpdateWithoutRenderJobsInput, VideoUncheckedUpdateWithoutRenderJobsInput>
+    create: XOR<VideoCreateWithoutRenderJobsInput, VideoUncheckedCreateWithoutRenderJobsInput>
+    where?: VideoWhereInput
+  }
+
+  export type VideoUpdateToOneWithWhereWithoutRenderJobsInput = {
+    where?: VideoWhereInput
+    data: XOR<VideoUpdateWithoutRenderJobsInput, VideoUncheckedUpdateWithoutRenderJobsInput>
+  }
+
+  export type VideoUpdateWithoutRenderJobsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    path?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    instructions?: InstructionUpdateManyWithoutVideoNestedInput
+    orignal?: VideoUpdateOneWithoutCopiesNestedInput
+    copies?: VideoUpdateManyWithoutOrignalNestedInput
+  }
+
+  export type VideoUncheckedUpdateWithoutRenderJobsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    path?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orignalId?: NullableStringFieldUpdateOperationsInput | string | null
+    instructions?: InstructionUncheckedUpdateManyWithoutVideoNestedInput
+    copies?: VideoUncheckedUpdateManyWithoutOrignalNestedInput
+  }
+
+  export type InstructionCreateManyVideoInput = {
+    id?: string
+    type: $Enums.InstructionType
     params: JsonNullValueInput | InputJsonValue
+    sequence: number
+    createdAt?: Date | string
+  }
+
+  export type RenderJobCreateManyVideoInput = {
+    id?: string
+    status: $Enums.JobStatus
+    outputUrl?: string | null
+    errorMessage?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VideoCreateManyOrignalInput = {
+    id?: string
+    filename: string
+    path: string
+    size: number
+    duration?: number | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type EditTaskUpdateWithoutVideoInput = {
+  export type InstructionUpdateWithoutVideoInput = {
     id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
+    type?: EnumInstructionTypeFieldUpdateOperationsInput | $Enums.InstructionType
     params?: JsonNullValueInput | InputJsonValue
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    sequence?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstructionUncheckedUpdateWithoutVideoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumInstructionTypeFieldUpdateOperationsInput | $Enums.InstructionType
+    params?: JsonNullValueInput | InputJsonValue
+    sequence?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstructionUncheckedUpdateManyWithoutVideoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumInstructionTypeFieldUpdateOperationsInput | $Enums.InstructionType
+    params?: JsonNullValueInput | InputJsonValue
+    sequence?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RenderJobUpdateWithoutVideoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    outputUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type EditTaskUncheckedUpdateWithoutVideoInput = {
+  export type RenderJobUncheckedUpdateWithoutVideoInput = {
     id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    params?: JsonNullValueInput | InputJsonValue
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    outputUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type EditTaskUncheckedUpdateManyWithoutVideoInput = {
+  export type RenderJobUncheckedUpdateManyWithoutVideoInput = {
     id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    params?: JsonNullValueInput | InputJsonValue
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    outputUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VideoUpdateWithoutOrignalInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    path?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    instructions?: InstructionUpdateManyWithoutVideoNestedInput
+    renderJobs?: RenderJobUpdateManyWithoutVideoNestedInput
+    copies?: VideoUpdateManyWithoutOrignalNestedInput
+  }
+
+  export type VideoUncheckedUpdateWithoutOrignalInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    path?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    instructions?: InstructionUncheckedUpdateManyWithoutVideoNestedInput
+    renderJobs?: RenderJobUncheckedUpdateManyWithoutVideoNestedInput
+    copies?: VideoUncheckedUpdateManyWithoutOrignalNestedInput
+  }
+
+  export type VideoUncheckedUpdateManyWithoutOrignalInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    path?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

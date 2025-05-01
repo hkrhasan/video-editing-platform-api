@@ -126,13 +126,36 @@ exports.Prisma.VideoScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  isRendered: 'isRendered',
-  originalId: 'originalId'
+  orignalId: 'orignalId'
+};
+
+exports.Prisma.InstructionScalarFieldEnum = {
+  id: 'id',
+  videoId: 'videoId',
+  type: 'type',
+  params: 'params',
+  sequence: 'sequence',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.RenderJobScalarFieldEnum = {
+  id: 'id',
+  videoId: 'videoId',
+  status: 'status',
+  outputUrl: 'outputUrl',
+  errorMessage: 'errorMessage',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -144,13 +167,35 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
 exports.Status = exports.$Enums.Status = {
   uploaded: 'uploaded',
-  editing: 'editing'
+  pending: 'pending'
+};
+
+exports.InstructionType = exports.$Enums.InstructionType = {
+  SUBTITLE: 'SUBTITLE',
+  AUDIO_MODIFY: 'AUDIO_MODIFY',
+  OVERLAY_TEXT: 'OVERLAY_TEXT',
+  OVERLAY_IMAGE: 'OVERLAY_IMAGE'
+};
+
+exports.JobStatus = exports.$Enums.JobStatus = {
+  QUEUED: 'QUEUED',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
 };
 
 exports.Prisma.ModelName = {
-  Video: 'Video'
+  Video: 'Video',
+  Instruction: 'Instruction',
+  RenderJob: 'RenderJob'
 };
 
 /**

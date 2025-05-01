@@ -15,37 +15,63 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum InstructionType {
+  SUBTITLE
+  AUDIO_MODIFY
+  OVERLAY_TEXT
+  OVERLAY_IMAGE
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum Status {
+  uploaded
+  pending
+}
+
 model Video {
-  id         String   @id @default(cuid())
-  filename   String
-  path       String
-  size       Int
-  duration   Float?
-  status     Status   @default(uploaded)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  isRendered Boolean  @default(false)
-  originalId String?  @map("original_id")
-  original   Video?   @relation("OrignalCopy", fields: [originalId], references: [id])
-  copies     Video[]  @relation("OrignalCopy")
+  id           String        @id @default(cuid())
+  filename     String
+  path         String
+  size         Int
+  duration     Float?
+  status       Status        @default(uploaded)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  instructions Instruction[] // all edits for this video
+  renderJobs   RenderJob[] // history of render attempts
+  orignalId    String?
+  orignal      Video?        @relation("OrignalCopies", fields: [orignalId], references: [id])
+  copies       Video[]       @relation("OrignalCopies")
 
   @@map("video")
 }
 
-// model EditTask {
-//   id        String   @id @default(uuid())
-//   video     Video    @relation(fields: [videoId], references: [id])
-//   videoId   String
-//   type      String
-//   params    Json
-//   status    Status   @default(pending)
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
+model Instruction {
+  id        String          @id @default(uuid())
+  video     Video           @relation(fields: [videoId], references: [id])
+  videoId   String
+  type      InstructionType
+  params    Json // e.g. { "start": "00:00:05.000", "end": "00:00:05.000", "text": "Hello", "x": 10, "y": 50 }
+  sequence  Int // order in which this instruction is applied
+  createdAt DateTime        @default(now())
 
-//   @@map("edit_task")
-// }
+  @@index([videoId, sequence])
+}
 
-enum Status {
-  uploaded
-  editing
+model RenderJob {
+  id           String    @id @default(uuid())
+  video        Video     @relation(fields: [videoId], references: [id])
+  videoId      String
+  status       JobStatus // e.g. QUEUED / RUNNING / COMPLETED / FAILED
+  outputUrl    String? // e.g. S3 key or signed URL once done
+  errorMessage String?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }

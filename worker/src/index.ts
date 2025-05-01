@@ -1,10 +1,12 @@
 import { Redis } from 'ioredis';
 import { Worker } from 'bullmq';
-import { FFmpegService } from './services/ffmpeg.service';
 import { S3Service } from './services/s3.service';
-import { prisma } from "./prisma";
-import { v4 as uuidV4 } from "uuid"
+import { Instruction, prisma, JobStatus, InstructionType } from "./prisma";
 import { RawFFMPEGService } from './services/rawffmpeg.service';
+import { parseTimeToSeconds } from './utils/time';
+import path from 'path';
+import fs from 'fs/promises';
+
 
 const redisConnection = new Redis({
   host: process.env.REDIS_HOST,
@@ -13,74 +15,144 @@ const redisConnection = new Redis({
   enableReadyCheck: true,
 });
 
-const ffmpegService = new FFmpegService();
 const s3Service = new S3Service();
 const rawFFMPEGService = new RawFFMPEGService();
 
-type VideoPayload = {
+type JobData = {
   videoId: string;
-  objPath: string;
-};
+  path: string;
+  instructions: Instruction[];
+  jobId: string;
+}
 
-type TrimPayload = VideoPayload & {
-  start: string;
-  end: string;
-};
-
-type OverlayPayload = VideoPayload & {
-  // Add overlay-specific properties
-  overlayImagePath: string;
-  position: { x: number; y: number };
-};
-
-// Discriminated union type
-type JobData =
-  | {
-    action: "trim";
-    data: TrimPayload;
-  }
-  | {
-    action: "overlay";
-    data: OverlayPayload;
-  };
-
-const editWorker = new Worker<JobData>("editVideoQueue", async (job) => {
+const editWorker = new Worker<JobData>("renderQueue", async (job) => {
+  const { videoId, path: s3Path, instructions, jobId } = job.data;
+  let downloadedFilePath: string | undefined = undefined;
+  let outputFile: string | undefined = undefined;
+  const filters: string[] = [];
   try {
-    console.log(`Data ${JSON.stringify(job.data)}`);
+    console.log("Job is started: ", jobId)
+    // Apply trim immediately if present
+    // const trimInstr = instructions.find(i => i.type === InstructionType.TRIM);
 
-    const { action, data } = job.data;
+    // if (trimInstr) {
+    //   const { start, end } = trimInstr.params as { start: string; end: string };
+    //   inputPath = await rawFFMPEGService.trim(inputPath, { start, end })
+    // }
 
-    switch (action) {
-      case "overlay":
-        // Implement overlay logic here
-        throw Error("Not Implemented yet....");
+    // Apply Subtitle
+    filters.push(...instructions.filter((i) => i.type === InstructionType.SUBTITLE).map((instr) => {
+      const { text, start, end, position, fontColor = "white", fontSize = 24, backgroundColor = "black" } = instr.params as {
+        text: string;
+        start: string;
+        end: string;
+        fontSize?: number;
+        backgroundColor?: string;
+        fontColor?: string;
+        position?: {
+          x: number;
+          y: number;
+        }
+      }
 
-      case "trim":
-        const { objPath, start, end, videoId } = data;
-        const mainFile = await s3Service.download(objPath)
-        const trimmedFile = await rawFFMPEGService.trim(mainFile, { start, end })
+      const x = position?.x ?? '(w-text_w)/2';
+      const y = position?.y ?? 'h-text_h-10';
 
-        const uploadedURI = await s3Service.upload(trimmedFile, {
-          prefix: `videos/${videoId}`
-        })
+      const safeText = text.replace(/'/g, "\\'");
+      const startMs = parseTimeToSeconds(start)
+      const endMs = parseTimeToSeconds(end)
+      let filter = [
+        `drawtext=text='${safeText}'`,
+        `x=${x}`,
+        `y=${y}`,
+        `enable='between(t,${startMs},${endMs})'`
+      ]
 
-        console.log({ uploadedURI })
-        throw new Error("Incomplete job ......")
-        break;
+      if (fontColor) filter.push(`fontcolor=${fontColor}`)
+      if (fontSize) filter.push(`fontsize=${fontSize}`)
+      if (backgroundColor) {
+        filter.push(...[`box=1`, `boxcolor=${backgroundColor}@0.5`])
+      }
 
-      default:
-        // This will never be reached due to discriminated union
-        const _exhaustiveCheck: never = action;
-        throw Error("Invalid Action");
+      return filter.join(':')
+    }))
+
+    if (!filters.length) {
+      await prisma.renderJob.update({
+        where: { id: jobId },
+        data: {
+          status: JobStatus.FAILED,
+          errorMessage: "there is nothing to render",
+          isActive: false
+        }
+      })
+
+
+      return;
     }
 
+    console.log(`${filters.length}: Filters found....`)
+
+    // Update Job Status
+    let [_, downloadedFile] = await Promise.all([
+      prisma.renderJob.update({
+        where: {
+          id: jobId
+        },
+        data: {
+          status: JobStatus.RUNNING
+        }
+      }),
+      s3Service.download(s3Path)
+    ]);
+
+    console.log(`${downloadedFile} File downloaded from s3`)
+    downloadedFilePath = downloadedFile;
+
+    outputFile = await rawFFMPEGService.renderWithFilters(downloadedFile, filters)
+
+    console.log(`Filter applied.....`)
+
+    const uploaded = await s3Service.upload(outputFile, {
+      prefix: 'videos',
+      fileName: path.basename(`${videoId}${path.extname(downloadedFile)}`)
+    })
+
+
+
+    await prisma.video.update({
+      where: { id: videoId },
+      data: {
+        path: uploaded
+      }
+    })
+
+    // Mark Job completed
+    await prisma.renderJob.update({
+      where: {
+        id: jobId
+      },
+      data: {
+        status: JobStatus.COMPLETED,
+        isActive: false,
+      }
+    })
     console.log(`${job.id} Job is completed`);
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(`Job ${job.id} failed with:`, error.message);
       console.error('Error stack:', error.stack);
     }
-    throw error;
+    await prisma.renderJob.update({
+      where: { id: jobId },
+      data: {
+        status: JobStatus.FAILED,
+        isActive: false
+      }
+    })
+  } finally {
+    if (downloadedFilePath) await fs.unlink(downloadedFilePath)
+    if (outputFile) await fs.unlink(outputFile)
   }
 }, {
   connection: redisConnection
@@ -93,4 +165,4 @@ editWorker.on('completed', (job) => {
 
 editWorker.on('failed', (job, err) => {
   console.error(`Job ${job?.id} failed:`, err);
-});
+})

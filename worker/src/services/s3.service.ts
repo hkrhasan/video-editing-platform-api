@@ -19,15 +19,14 @@ export class S3Service {
       prefix?: string;       // e.g. "videos/{videoId}"
       mimetype?: string;
       buffer?: Buffer;
+      fileName?: string;
     }
   ): Promise<string> {
-    const { prefix = '', mimetype } = options || {};
+    const { prefix = '', mimetype, fileName } = options || {};
     const buffer = options?.buffer || fs.createReadStream(filePath);
-    const ext = path.extname(filePath)
-    const base = path.basename(filePath, ext);
-
+    const base = path.basename(fileName || filePath);
     // Build the S3 key: e.g. "videos/1234/original.mp4"
-    const key = path.posix.join(prefix, `${base}.${ext}`);
+    const key = path.posix.join(prefix, base);
 
     const command = new PutObjectCommand({
       Bucket: config.aws.bucketName,
@@ -46,6 +45,8 @@ export class S3Service {
     const fileExt = path.extname(key);
     const baseName = path.basename(key, fileExt);
     const tempName = `${baseName}_${Date.now()}${fileExt}`;
+
+
     const tempPath = path.join(os.tmpdir(), tempName);
     const getObject = new GetObjectCommand({ Bucket: config.aws.bucketName, Key: key });
     const response = await this.s3.send(getObject);

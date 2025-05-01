@@ -15,34 +15,63 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Video {
-  id        String     @id @default(cuid())
-  filename  String
-  path      String
-  size      Int
-  duration  Float?
-  status    Status     @default(uploaded)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  edits     EditTask[]
-
-  @@map("video")
+enum InstructionType {
+  SUBTITLE
+  AUDIO_MODIFY
+  OVERLAY_TEXT
+  OVERLAY_IMAGE
 }
 
-model EditTask {
-  id        String   @id @default(uuid())
-  video     Video    @relation(fields: [videoId], references: [id])
-  videoId   String
-  type      String
-  params    Json
-  status    Status   @default(pending)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("edit_task")
+enum JobStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
 }
 
 enum Status {
   uploaded
   pending
+}
+
+model Video {
+  id           String        @id @default(cuid())
+  filename     String
+  path         String
+  size         Int
+  duration     Float?
+  status       Status        @default(uploaded)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  instructions Instruction[] // all edits for this video
+  renderJobs   RenderJob[] // history of render attempts
+  orignalId    String?
+  orignal      Video?        @relation("OrignalCopies", fields: [orignalId], references: [id])
+  copies       Video[]       @relation("OrignalCopies")
+
+  @@map("video")
+}
+
+model Instruction {
+  id        String          @id @default(uuid())
+  video     Video           @relation(fields: [videoId], references: [id])
+  videoId   String
+  type      InstructionType
+  params    Json // e.g. { "start": "00:00:05.000", "end": "00:00:05.000", "text": "Hello", "x": 10, "y": 50 }
+  sequence  Int // order in which this instruction is applied
+  createdAt DateTime        @default(now())
+
+  @@index([videoId, sequence])
+}
+
+model RenderJob {
+  id           String    @id @default(uuid())
+  video        Video     @relation(fields: [videoId], references: [id])
+  videoId      String
+  status       JobStatus // e.g. QUEUED / RUNNING / COMPLETED / FAILED
+  outputUrl    String? // e.g. S3 key or signed URL once done
+  errorMessage String?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }

@@ -1,8 +1,9 @@
-import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, GetObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
 import path from 'path';
 import os from 'os';
 import fs from 'fs';
 import { config } from '../config';
+import { Readable } from 'stream';
 
 export class S3Service {
   private s3 = new S3Client({
@@ -65,5 +66,33 @@ export class S3Service {
       fs.writeFileSync(tempPath, data);
     }
     return tempPath;
+  }
+
+
+  public async getStream(key: string): Promise<Readable> {
+    try {
+      const getObject = new GetObjectCommand({
+        Bucket: config.aws.bucketName,
+        Key: key
+      });
+
+      const response = await this.s3.send(getObject);
+
+      if (!response.Body) throw new Error("Empty response body from s3")
+
+      return response.Body as Readable
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  public async getContentType(key: string): Promise<string> {
+    const headCommand = new HeadObjectCommand({
+      Bucket: config.aws.bucketName,
+      Key: key,
+    })
+    const response = await this.s3.send(headCommand);
+    return response.ContentType || 'application/octet-stream';
   }
 }

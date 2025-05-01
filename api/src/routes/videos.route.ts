@@ -38,6 +38,19 @@ const router = Router();
  *           type: string
  *           example: InternalServerError
  *
+ *     JobStatus:
+ *       type: object
+ *       required:
+ *         - jobId
+ *         - status
+ *       properties:
+ *         jobId:
+ *           type: string
+ *           format: uuid
+ *         status:
+ *           type: string
+ *           example: RUNNING
+ *           
  *     VideoMetadata:
  *       type: object
  *       required:
@@ -260,13 +273,13 @@ router.post(
  *         description: Video ID
  *     responses:
  *       200:
- *         description: Video trimmed successfully
+ *         description: Render Job Queued
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/VideoMetadata'
+ *               $ref: '#/components/schemas/JobStatus'
  *       400:
- *         description: Invalid trim parameters
+ *         description: Invalid render parameters
  *         content:
  *           application/json:
  *             schema:
@@ -281,6 +294,47 @@ router.post(
 router.post(
   "/:id/render",
   videoController.render as unknown as RequestHandler
+);
+
+
+/**
+ * @openapi
+ * /api/videos/{id}/download:
+ *   get:
+ *     summary: Download the final rendered video
+ *     tags:
+ *       - Videos
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Video ID
+ *     responses:
+ *       200:
+ *         description: The rendered video file
+ *         content:
+ *           video/mp4:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Rendered video not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Unexpected error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+router.get(
+  "/:id/download",
+  videoController.download as unknown as RequestHandler
 );
 
 export default router;

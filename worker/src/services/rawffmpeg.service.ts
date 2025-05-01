@@ -1,108 +1,174 @@
 import { promisify } from 'util';
-import { exec } from 'child_process';
-import path from 'path'
-import os from 'os'
-import fs from 'fs'
+import { exec as execCallback } from 'child_process';
+import path from 'path';
+import os from 'os';
+import fs from 'fs/promises';
+
+const exec = promisify(execCallback);
+
+type FFmpegInput = string | Buffer;
+
+interface TrimOptions {
+  start: string;           // seconds
+  end: string;             // seconds
+  outputFileName?: string; // optional custom filename
+}
+
+interface TextOverlayOptions {
+  start: number;            // seconds
+  end: number;              // seconds
+  fontSize?: number;
+  fontColor?: string;
+  backgroundColor?: string;
+  position?: { x: string; y: string }; // supports expressions e.g. '(w-text_w)/2'
+  outputFileName?: string;
+}
 
 export class RawFFMPEGService {
-  private execCommand: (cmd: string) => Promise<{ stdout: string; stderr: string }>;
-
-  constructor() {
-    // Promisified exec for running FFmpeg CLI commands
-    this.execCommand = promisify(exec);
+  private async runFFmpegCommand(args: string[]): Promise<void> {
+    const cmd = ['ffmpeg', ...args].join(' ');
+    const { stdout, stderr } = await exec(cmd);
+    if (stderr) console.warn('FFmpeg warning:', stderr);
   }
 
-  /**
-   * Runs an FFmpeg command.
-   * @param command - The FFmpeg command string to execute.
-   */
-  private async runFFmpegCommand(command: string): Promise<void> {
-    await this.execCommand(command);
-  }
-
-
-  /**
-   * Retrieves the duration of a video.
-   * @param input - Local file path (string) or Buffer containing video data.
-   * @returns Duration in seconds as a number.
-   */
-  public async getDuration(input: string | Buffer, options?: {
-    ext?: string;
-  }): Promise<number> {
+  public async getDuration(input: FFmpegInput, ext = '.mp4'): Promise<number> {
     let tempPath: string | undefined;
-    let targetPath: string;
+    let target: string;
+
+    if (Buffer.isBuffer(input)) {
+      tempPath = path.join(os.tmpdir(), `buffer_${Date.now()}${ext}`);
+      await fs.writeFile(tempPath, input);
+      target = tempPath;
+    } else {
+      target = input;
+    }
+
     try {
-      if (Buffer.isBuffer(input)) {
-        // Write buffer to temp file
-        const tempName = `buffer_${Date.now()}.${options?.ext || "mp4"}`;
-        tempPath = path.join(os.tmpdir(), tempName);
-        fs.writeFileSync(tempPath, input);
-        targetPath = tempPath;
-      } else if (typeof input === 'string') {
-        // Local file path
-        if (!fs.existsSync(input)) throw new Error(`File not found: ${input}`);
-        targetPath = input;
-      } else {
-        throw new Error('Unsupported input type for getDuration');
-      }
-      const cmd = `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${targetPath}"`;
-      const { stdout } = await this.execCommand(cmd);
+      const cmd = `ffprobe -v error -show_entries format=duration -of csv=p=0 "${target}"`;
+      const { stdout } = await exec(cmd);
       return parseFloat(stdout.trim());
-    } catch (error) {
-      throw error;
     } finally {
-      if (tempPath && fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
-    }
-  }
-
-
-  public async trim(input: string, options: { outputPath?: string; start: string; end: string; clean?: boolean }): Promise<string> {
-    let tempPath: string | undefined;
-    let outputPath: string;
-    try {
-      const { start, end } = options;
-      const ext = path.extname(input)
-
-      if (options.outputPath) {
-        outputPath = options.outputPath;
-      } else {
-        tempPath = path.join(os.tmpdir(), `${path.basename(input, ext)}_trimmed_${Date.now()}${ext}`)
-        outputPath = tempPath;
+      if (tempPath) {
+        await fs.unlink(tempPath).catch(() => { /* ignore */ });
       }
-
-      if (!fs.existsSync(input)) throw new Error(`File not found: ${outputPath}`);
-      // Build and run FFmpeg command to trim video
-      const command = `ffmpeg -i "${input}" -ss ${start} -to ${end} -c copy -y "${outputPath}"`;
-      await this.runFFmpegCommand(command);
-      return outputPath;
-    } catch (error) {
-      throw error;
-    } finally {
-      if (options.clean && tempPath && fs.existsSync(tempPath)) {
-        fs.unlinkSync(tempPath)
-        console.log(`Removed file: ${tempPath}`)
-      };
     }
   }
 
+  public async trim(inputPath: string, options: TrimOptions): Promise<string> {
+    const { start, end, outputFileName } = options;
+    const ext = path.extname(inputPath) || '.mp4';
+    const output = outputFileName
+      ? path.join(os.tmpdir(), outputFileName)
+      : path.join(os.tmpdir(), `${path.basename(inputPath, ext)}_trimmed_${Date.now()}${ext}`);
 
+    const args = [
+      '-y',
+      '-i', `"${inputPath}"`,
+      '-ss', start,
+      '-to', end,
+      '-c', 'copy',
+      `"${output}"`
+    ];
 
-  public async addSubtitles(
-    input: string,
-    subtitlesPath: string
-  ): Promise<string> {
-    let inputPath: string | undefined;
-    let outputPath: string | undefined;
-    try {
-      const ext = path.extname(input);
-      const base = path.basename(input, ext);
-      outputPath = path.join(os.tmpdir(), `${base}_subtitled_${Date.now()}${ext}`);
-      const cmd = `ffmpeg -i "${inputPath}" -vf subtitles=\"${subtitlesPath}\" -c:a copy -y "${outputPath}"`;
-      await this.runFFmpegCommand(cmd);
-      return outputPath;
-    } finally {
-      if (inputPath) fs.unlinkSync(inputPath);
-      if (outputPath) fs.unlinkSync(outputPath);
+    await this.runFFmpegCommand(args);
+    return output;
+  }
+
+  public async addSubtitles(inputPath: string, srtContentOrPath: string): Promise<string> {
+    let subtitlePath = srtContentOrPath;
+    if (!srtContentOrPath.endsWith('.srt')) {
+      subtitlePath = path.join(os.tmpdir(), `sub_${Date.now()}.srt`);
+      await fs.writeFile(subtitlePath, srtContentOrPath, 'utf-8');
     }
+
+    const ext = path.extname(inputPath) || '.mp4';
+    const output = path.join(os.tmpdir(), `${path.basename(inputPath, ext)}_subtitled_${Date.now()}${ext}`);
+
+    const filter = `subtitles='${subtitlePath.replace(/'/g, "'\\''")}':force_style='Alignment=2'`;
+    const args = [
+      '-y',
+      '-i', `"${inputPath}"`,
+      '-vf', `"${filter}"`,
+      '-c:v', 'libx264',
+      '-preset', 'fast',
+      '-c:a', 'copy',
+      `"${output}"`
+    ];
+
+    await this.runFFmpegCommand(args);
+
+    if (subtitlePath !== srtContentOrPath) {
+      await fs.unlink(subtitlePath).catch(() => { /* ignore */ });
+    }
+
+    return output;
+  }
+
+  public async addTextOverlay(
+    inputPath: string,
+    text: string,
+    options: TextOverlayOptions
+  ): Promise<string> {
+    const ext = path.extname(inputPath) || '.mp4';
+    const output = options.outputFileName
+      ? path.join(os.tmpdir(), options.outputFileName)
+      : path.join(os.tmpdir(), `${path.basename(inputPath, ext)}_overlay_${Date.now()}${ext}`);
+
+    const safeText = text.replace(/'/g, "\\'");
+    const fontSize = options.fontSize ?? 24;
+    const fontColor = options.fontColor ?? 'white';
+    const bgColor = options.backgroundColor ?? 'black@0.5';
+    const pos = options.position ?? { x: '(w-text_w)/2', y: 'h-text_h-10' };
+
+    const drawtext = [
+      `drawtext=text='${safeText}'`,
+      `fontsize=${fontSize}`,
+      `fontcolor=${fontColor}`,
+      `box=1`,
+      `boxcolor=${bgColor}`,
+      `x=${pos.x}`,
+      `y=${pos.y}`,
+      `enable='between(t,${options.start},${options.end})'`
+    ].join(':');
+
+    const args = [
+      '-y',
+      '-i', `"${inputPath}"`,
+      '-vf', `"${drawtext}"`,
+      '-c:v', 'libx264',
+      '-preset', 'fast',
+      '-c:a', 'aac',
+      '-movflags', '+faststart',
+      `"${output}"`
+    ];
+
+    await this.runFFmpegCommand(args);
+    return output;
+  }
+
+  /**
+   * Applies an arbitrary list of FFmpeg filters to a single input in one pass.
+   * @param inputPath  path to the source video file
+   * @param filters    e.g. ["drawtext=...", "subtitles=..."]
+   * @returns          path to the newly rendered file
+   */
+  public async renderWithFilters(inputPath: string, filters: string[], outputPath?: string): Promise<string> {
+    const ext = path.extname(inputPath) ?? '.mp4';
+    const output = outputPath ?? path.join(os.tmpdir(), `render_${Date.now()}${ext}`);
+    const vf = filters.join(',');
+
+    const args = [
+      '-y',
+      '-i', `"${inputPath}"`,
+      '-vf', `"${vf}"`,
+      '-c:v', 'libx264',
+      '-preset', 'fast',
+      '-c:a', 'aac',
+      '-movflags', '+faststart',
+      `"${output}"`
+    ];
+
+    await this.runFFmpegCommand(args);
+    return output;
   }
 }
