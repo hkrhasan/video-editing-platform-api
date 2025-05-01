@@ -1,4 +1,4 @@
-# School Management API
+# Video Editing Platform
 
 Node.js API for video editing using Express, Prisma, Postgresql, Docker, and Redis.
 
@@ -13,17 +13,12 @@ Node.js API for video editing using Express, Prisma, Postgresql, Docker, and Red
 - Docker 20.10+
 - AWS S3 credentials
 
-## Structure
-video-editing-platform/ 
-├── api
-├── worker 
-└── README.md
 
 ## Setup
 1. Clone repository:
 ```bash
 git clone https://github.com/hkrhasan/video-editing-platform-api.git
-cd school-mgmt
+cd video-editing-platform-api
 ```
 
 2. Create .env file for api
