@@ -19,7 +19,8 @@ services:
     networks:
       - app-network
     command: >
-      sh -c "rm -rf generated && rm -rf prisma/migrations && pnpm run prisma:migrate:reset && pnpm run prisma:migrate && pnpm run prisma:generate && pnpm run dev"
+      sh -c "pnpm run dev"
+      # sh -c "rm -rf generated && rm -rf prisma/migrations && pnpm run prisma:migrate:reset && pnpm run prisma:migrate && pnpm run prisma:generate && pnpm run dev"
 
   worker:
     build:

@@ -228,7 +228,7 @@ router.post(
  *           schema:
  *             $ref: '#/components/schemas/SubtitleRequest'
  *           example:
- *             subtitle: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+ *             text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
  *             start: "00:00:05.000"
  *             end:   "00:00:10.000"
  *     responses:
