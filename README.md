@@ -35,3 +35,8 @@ cd worker && cp .env.example .env
 ```bash
 docker-compose up
 ```
+
+
+## DEMO VIDEO
+
+[LINK](https://drive.google.com/file/d/1g6IzPpqzBhfRPjEczDmHoa16ZaT501Kt/view?usp=sharing) 
